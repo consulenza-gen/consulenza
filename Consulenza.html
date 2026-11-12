@@ -1,0 +1,1028 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<title>Proteggi oggi ciò che conta domani</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: left rail with the 4 pillars + LTC and their ticks, one big slide at a time, large bottom nav for desktop and tablet. */
+:root{
+  --red:#C41A16; --red-deep:#A31410; --coral:#FF6B63; --sun:#FFC93C; --navy:#1F2A44; --leaf:#2E8F5E;
+  --paper:#FBF6F0; --ink:#1F1F24; --card:#FFFFFF; --muted:#5E5A60; --blush:#F9E1DC; --accpaper:#C41A16;
+  --chrome:#FFFFFF; --chromefg:#1F1F24; --line:#E7DAD1; --soft:#F6EEE8;
+  --fd:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fb:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1D1416; --ink:#F7EDE8; --card:#2A1B1E; --muted:#C8B5B0; --blush:#3A2024; --accpaper:#FF6B63; --leaf:#5CCB91;
+  --chrome:#121214; --chromefg:#F7EDE8; --line:#3A2A2D; --soft:#1B1B1F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1D1416; --ink:#F7EDE8; --card:#2A1B1E; --muted:#C8B5B0; --blush:#3A2024; --accpaper:#FF6B63; --leaf:#5CCB91;
+  --chrome:#121214; --chromefg:#F7EDE8; --line:#3A2A2D; --soft:#1B1B1F; color-scheme:dark}
+*{box-sizing:border-box}
+html{font-size:clamp(16px,.55vw + 11px,22px)}
+html,body{height:100%}
+body{margin:0;background:var(--chrome);color:var(--chromefg);font-family:var(--fb);font-size:1rem;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr)}
+.main{display:flex;flex-direction:column;min-height:0;min-width:0}
+
+/* rail */
+.rail{position:fixed;top:0;bottom:0;left:0;z-index:60;width:min(88vw,18rem);transform:translateX(-105%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s;display:flex;flex-direction:column;gap:6px;overflow-y:auto;border-right:1px solid var(--line);background:var(--chrome);
+  padding-top:18px;padding-bottom:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:14px}
+.brand{font-family:var(--fd);font-weight:800;font-size:1.25rem;color:var(--red);letter-spacing:.01em}
+.brandsub{font-size:.82rem;color:var(--muted);margin-bottom:12px}
+.rl{font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px}
+.ri{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:14px;padding:10px 12px;min-height:52px;transition:background .2s,border-color .2s}
+.ri:hover{background:var(--soft)}
+.ri[aria-current="true"]{background:var(--soft);border-color:var(--red)}
+.ri b{display:block;font-family:var(--fd);font-size:1.02rem;line-height:1.15}
+.ri small{display:block;color:var(--muted);font-size:.78rem}
+.dot{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:var(--chrome);transition:background .3s,border-color .3s,transform .3s}
+.dot svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:opacity .25s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.done .dot{background:var(--leaf);border-color:var(--leaf);transform:scale(1.05)}
+.done .dot svg{opacity:1;transform:none}
+.dot.n{font-weight:700;font-size:.85rem;color:var(--muted)}
+.done .dot.n{color:#fff}
+.railfoot{margin-top:auto;font-size:.78rem;color:var(--muted);padding-top:12px}
+
+.rail.shown{transform:none;visibility:visible;transition-delay:0s;box-shadow:0 0 48px rgba(0,0,0,.35)}
+.scrim{position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.scrim.shown{opacity:1;visibility:visible;transition-delay:0s}
+.rhead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rx{flex:none;width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:transparent;display:grid;place-items:center}
+.rx svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round}
+/* menu laterale: pannello rosso, scritte bianche sullo sfondo, scritte nere nei riquadri bianchi (colori propri, uguali in chiaro e scuro) */
+.rail{--rbg:#C41A16;--rtx:#FFFFFF;--rink:#000000;--rln:#000000;--rgn:#1F7A4D;--rhov:#F1F1F1;color-scheme:light;top:max(10px,env(safe-area-inset-top,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));left:max(10px,env(safe-area-inset-left,0px));width:min(86vw,19.5rem);border:1.5px solid var(--rln);border-radius:26px;background:var(--rbg);color:var(--rtx);padding:20px 12px 14px;gap:6px;overflow:hidden;transform:translateX(-112%);transition:transform .5s cubic-bezier(.22,.8,.24,1),visibility 0s .5s,box-shadow .5s}
+.rail.shown{box-shadow:0 34px 80px -30px rgba(0,0,0,.6)}
+.scrim{background:rgba(31,24,26,.3);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.rail .rhead{align-items:center;padding:0 6px 10px 10px}
+.rail .rhead .brand{font-size:1.2rem;color:var(--rtx)}
+.rail .brandsub{font-size:.82rem;color:var(--rtx);margin:2px 0 0}
+.rail .rx{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--rln);background:#fff;color:var(--rink);transition:background .2s}
+.rail .rx:hover{background:var(--rhov)}
+.rail .rx svg{width:16px;height:16px}
+.rail .rscroll{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px 2px 6px}
+.rail .rl{font-size:.68rem;font-weight:700;letter-spacing:.18em;color:var(--rtx);opacity:1;margin:10px 10px 0}
+.rail .ri{min-height:0;border:1.5px solid var(--rln);background:#fff;border-radius:16px;padding:7px 9px;gap:11px;color:var(--rink)}
+.rail .ri:hover{background:var(--rhov)}
+.rail .ri b{font-family:var(--fb);font-weight:700;font-size:.97rem;color:var(--rink)}
+.rail .ri small{font-size:.79rem;font-weight:500;color:var(--rink);opacity:1}
+.rail .ri[aria-current="true"]{background:#fff;border-width:2.5px;padding:6px 8px}
+.rail .dot{width:26px;height:26px;border:1.5px solid var(--rln);background:#fff}
+.rail .dot.n{font-weight:700;font-size:.78rem;color:var(--rink)}
+.rail .done .dot{background:#E4F4EA;border-color:var(--rgn);transform:none}
+.rail .done .dot svg{stroke:var(--rgn);width:14px;height:14px}
+.rail .done .dot.n{color:var(--rgn)}
+.rail .rnew{flex:none;display:grid;gap:8px;margin-top:4px;padding:12px 2px 0;border-top:1px solid rgba(255,255,255,.5)}
+.rail .railfoot{flex:none;margin-top:8px;padding:0 8px;font-size:.74rem;line-height:1.4;color:var(--rtx);opacity:1}
+.rail:has(.rask) .railfoot{display:none}
+.rbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid #000;background:#fff;font-weight:700;font-size:.9rem;color:#000;transition:background .2s}
+.rbtn:hover{background:#F1F1F1}
+.rbtn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rbtn.go{background:#000;color:#fff}
+.rbtn.go:hover{background:#333}
+.rask{margin:0;padding:0 6px;font-size:.84rem;line-height:1.45;color:#fff}
+.rrow{display:flex;flex-direction:column;gap:8px}
+@media (max-height:44rem){.rail .ri small{display:none}.rail .ri{padding:6px 9px}.rail .rhead{padding-bottom:6px}.rail .rl{margin-top:6px}}
+@media (prefers-reduced-motion:reduce){.rail{transition-duration:.01ms}}
+.brand,.rail .brand{font-family:'New Century Schoolbook','Century Schoolbook','TeX Gyre Schola','C059','Century Schoolbook L',Georgia,serif;font-weight:700;color:var(--red);letter-spacing:.01em}
+.toprow .brand{font-size:1.4rem}
+.back{margin:0 0 12px;align-self:flex-start}
+.temple{max-width:62rem;margin:0 auto}
+.troof{height:clamp(64px,11vw,104px);background:var(--cd);clip-path:polygon(50% 0,100% 100%,0 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;font-family:var(--fd);font-weight:800;font-size:clamp(1.1rem,3vw,2rem);letter-spacing:.14em;color:var(--acc)}
+.tcols{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,2vw,22px);padding:0 clamp(6px,2vw,28px);margin-top:6px}
+.tcol{background:var(--cd);color:var(--cfg);border:0;border-radius:6px 6px 0 0;padding:clamp(10px,2vw,22px);text-align:left;display:flex;flex-direction:column;gap:6px;cursor:pointer;min-height:clamp(210px,34vh,300px);transition:transform .2s,box-shadow .2s}
+.tcol:hover,.tcol:focus-visible{transform:translateY(-6px);box-shadow:0 0 0 3px var(--acc)}
+.tcol .no{font-family:var(--fd);font-weight:800;color:var(--acc);font-size:clamp(.75rem,1.3vw,.95rem)}
+.tcol h3{font-family:var(--fd);font-size:clamp(.95rem,2vw,1.5rem);line-height:1.1;margin:0}
+.tcol p{margin:0;font-size:clamp(.78rem,1.4vw,1rem);line-height:1.35}
+.tcol .go{margin-top:auto;font-weight:700;color:var(--acc);font-size:clamp(.78rem,1.3vw,.95rem)}
+.tb1,.tb2{background:var(--cd);border-radius:4px}
+.tb1{height:clamp(10px,1.8vw,16px);margin:0 clamp(2px,1vw,12px)}
+.tb2{height:clamp(12px,2.2vw,20px);margin:6px 0 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cmpw{overflow-x:auto}
+.cmp{width:100%;max-width:68rem;border-collapse:separate;border-spacing:0 10px}
+.cmp th,.cmp td{background:var(--cd);color:var(--cfg);padding:16px 20px;text-align:left;vertical-align:top;line-height:1.4}
+.cmp thead th{background:transparent;font-family:var(--fd);font-size:1.3rem;padding:0 20px 4px}
+.cmp tbody th{width:19%;font-family:var(--fd);font-size:1.2rem;color:var(--acc);border-radius:18px 0 0 18px}
+.cmp td:last-child{border-radius:0 18px 18px 0}
+.cmp td b{display:block;font-family:var(--fd);font-weight:800;font-size:clamp(1.4rem,2.4vw,2rem);line-height:1.1;margin-bottom:4px}
+.cmp td.ko b{color:#FF8A82}.cmp td.ok b{color:#5CCB91}
+@media (max-width:40rem){.cmp th,.cmp td{padding:12px}.cmp{min-width:34rem}}
+/* top + bottom bars */
+.top{flex:none;border-bottom:1px solid var(--line);background:var(--chrome)}
+.toprow{display:flex;align-items:center;gap:12px;min-height:56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.where{font-weight:700;font-size:.95rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.pill{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:8px 16px;min-height:44px;font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:8px;transition:background .2s,color .2s,border-color .2s}
+.pill:hover{background:var(--red);border-color:var(--red);color:#fff}
+.pill svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.prog{height:5px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--coral),var(--sun));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.nav{flex:none;border-top:1px solid var(--line);background:var(--chrome)}
+.navrow{display:flex;align-items:center;gap:14px;padding-top:12px;padding-bottom:max(12px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.nb2{min-height:56px;min-width:8.5rem;border-radius:16px;font-weight:700;font-size:1.05rem;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s,background .2s,opacity .2s}
+.nb2 svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.nb2.sec{border:2px solid var(--line);background:transparent}
+.nb2.sec:hover{border-color:var(--red)}
+.nb2.pri{border:0;background:var(--red);color:#fff;box-shadow:0 8px 18px -10px rgba(196,26,22,.9)}
+.nb2.pri:hover{transform:translateY(-2px);background:var(--red-deep)}
+.nb2[disabled]{opacity:.35;pointer-events:none}
+.steps{flex:1;display:flex;justify-content:center;align-items:center;gap:7px;min-width:0;flex-wrap:wrap}
+.steps i{width:10px;height:10px;border-radius:50%;background:var(--line);transition:background .3s,transform .3s}
+.steps i.on{background:var(--red);transform:scale(1.35)}
+.steps i.past{background:var(--coral)}
+
+/* stage + slides */
+.stage{flex:1;min-height:0;position:relative;overflow:hidden}
+.sl{--bg:var(--paper);--fg:var(--ink);--acc:var(--accpaper);--cd:var(--card);--cfg:var(--ink);--mu:var(--muted);--b1:var(--blush);--b2:var(--blush);--bd:var(--red);--ln:var(--line);
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);color:var(--fg);
+  opacity:0;visibility:hidden;transform:translateX(5%);transition:opacity .4s,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s}
+.sl.before{transform:translateX(-5%)}
+.sl.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.t-red{--bg:var(--red);--fg:#fff;--acc:#FFE3E0;--cd:var(--red-deep);--cfg:#fff;--mu:#FFD9D5;--b1:rgba(255,255,255,.13);--b2:rgba(0,0,0,.16);--bd:#fff;--ln:rgba(255,255,255,.3)}
+.t-dark{--bg:#1E1E23;--fg:#F6F1EA;--acc:var(--coral);--cd:#2A2C35;--cfg:#F6F1EA;--mu:#B9B7C0;--b1:rgba(196,26,22,.3);--b2:rgba(255,255,255,.04);--ln:rgba(255,255,255,.2)}
+.bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;animation:drift 16s ease-in-out infinite alternate}
+.b-a{width:62vmin;height:62vmin;right:-14vmin;top:-18vmin;background:var(--b1)}
+.b-b{width:46vmin;height:46vmin;left:-14vmin;bottom:-20vmin;background:var(--b2);animation-delay:-6s}
+@keyframes drift{to{transform:translate(-3vmin,4vmin) scale(1.07)}}
+.in{position:relative;z-index:1;min-height:100%;max-width:75rem;margin:0 auto;display:flex;flex-direction:column;gap:22px;
+  padding-top:clamp(20px,4.5vh,44px);padding-bottom:clamp(20px,4vh,36px);
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.on .rv{animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*70ms + 100ms)}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}}
+
+/* type */
+.kick{font-weight:700;font-size:.82rem;letter-spacing:.17em;text-transform:uppercase;color:var(--acc)}
+.ttl{font-family:var(--fd);font-weight:700;font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.06;letter-spacing:-.015em;margin:6px 0 0;text-wrap:balance}
+.hero .ttl{font-weight:800;font-size:clamp(2.4rem,5.2vw,4.8rem);line-height:1;letter-spacing:-.03em}
+.big{font-family:var(--fd);font-weight:800;font-size:clamp(4rem,11vw,9rem);line-height:.95;letter-spacing:-.035em;color:var(--acc);margin:8px 0 6px}
+.t-red .big{color:#fff}
+.sub{font-size:clamp(1.1rem,1.5vw,1.45rem);line-height:1.45;max-width:34em;margin:0}
+.lead{font-size:clamp(1.1rem,1.5vw,1.4rem);line-height:1.5;max-width:38em;margin:12px 0 0}
+.foots{font-weight:700;font-size:clamp(1.15rem,1.7vw,1.5rem);margin:0;max-width:38em}
+
+/* layout */
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:34px;align-items:center;flex:1}
+.head{display:flex;gap:16px;justify-content:space-between;align-items:flex-start}
+.head>div:first-child{min-width:0}
+.ill{background:var(--b1);border-radius:16%;padding:6%;width:100%;max-width:26rem;justify-self:end;animation:bob 5s ease-in-out infinite alternate}
+.ill.sm{background:none;padding:0;width:clamp(80px,11vw,150px);flex:none;animation:none}
+.ill svg{display:block;width:100%;height:auto}
+@keyframes bob{to{transform:translateY(-8px) rotate(-1deg)}}
+@media (max-width:56rem){.grid2{grid-template-columns:1fr;gap:18px}.ill{order:-1;max-width:11rem;justify-self:start}}
+
+/* tiles + cards */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:14px}
+.st{background:var(--cd);color:var(--cfg);border-radius:16px;padding:16px 18px;border-left:5px solid var(--bd)}
+.st b{display:block;font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1.1;color:var(--acc)}
+.t-red .st b,.t-red .cd .n{color:#fff}
+.st span{font-size:.95rem;color:var(--mu)}
+.cds{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:16px}
+.cds.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))}
+.cd{background:var(--cd);color:var(--cfg);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px;min-width:0;text-align:left;border:0}
+.ic{width:50px;height:50px;border-radius:50%;background:var(--red);display:grid;place-items:center;flex:none}
+.t-red .ic{background:rgba(255,255,255,.18)}
+.ic svg{width:26px;height:26px}
+.cd h3{font-family:var(--fd);font-size:1.3rem;line-height:1.15;margin:4px 0 0;color:var(--acc)}
+.t-red .cd h3{color:#fff}
+.cd p{margin:0;line-height:1.45}
+.cd .eg{font-size:.92rem;color:var(--mu);border-top:1px solid var(--ln);padding-top:10px;margin-top:auto}
+.cd .nbx{margin-top:auto;padding-top:10px;border-top:1px solid var(--ln)}
+.cd .n{display:block;font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1.05;color:var(--acc)}
+.cd .l{font-size:.92rem;color:var(--mu)}
+.nw{border-top:6px solid var(--red)}
+.nw .src{font-size:.76rem;font-weight:700;letter-spacing:.12em;color:var(--accpaper)}
+.t-dark .nw .src{color:var(--coral)}
+.nw h3{color:var(--cfg);font-size:1.2rem}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:14px}
+.terms.t4{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:36rem){.terms.t4{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+.tm{background:var(--cd);color:var(--cfg);border-radius:18px;padding:16px 18px;border-left:5px solid var(--bd)}
+.tm b{display:block;font-family:var(--fd);font-size:1.2rem;color:var(--acc);margin-bottom:2px}
+.t-red .tm b{color:#fff}
+.tm span{color:var(--mu);font-size:.98rem;line-height:1.45}
+.tlab{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:6px 0 -6px}
+
+/* bars */
+.bars{display:grid;gap:18px;margin-block:auto}
+.br{display:grid;grid-template-columns:minmax(8rem,14rem) minmax(0,1fr);gap:16px;align-items:center;font-size:1.1rem}
+.trk{height:3.4rem;border-radius:2rem;background:rgba(127,127,127,.16);overflow:hidden}
+.fill{height:100%;width:0;min-width:9rem;border-radius:2rem;display:flex;align-items:center;justify-content:flex-end;padding-right:20px;color:#fff;font-family:var(--fd);font-weight:800;font-size:1.3rem;white-space:nowrap}
+.on .fill{width:var(--w);transition:width 1.3s cubic-bezier(.2,.8,.2,1) .35s}
+.fill.navy{background:var(--navy)}.t-dark .fill.navy{background:#3A4F8A}
+.fill.red{background:var(--red)}
+@media (max-width:40rem){.br{grid-template-columns:1fr;gap:6px}}
+
+/* story */
+.story{display:grid;gap:12px;max-width:44rem}
+.sp1{display:flex;gap:16px;align-items:flex-start;background:var(--cd);color:var(--cfg);border-radius:18px;padding:16px 18px;font-size:clamp(1.05rem,1.4vw,1.3rem);line-height:1.45}
+.sp1 .no{flex:none;width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--fd);font-weight:800}
+.t-red .sp1 .no{background:#fff;color:var(--red)}
+.sp1{animation:rise .5s both}
+.sp1.last{border:2px solid var(--red)}
+.more{align-self:flex-start;border:0;background:var(--sun);color:#1F1F24;border-radius:999px;min-height:52px;padding:0 26px;font-weight:700;font-size:1.05rem;transition:transform .15s}
+.more:hover{transform:translateY(-2px)}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid currentColor;border-radius:999px;padding:2px 10px;opacity:.8}
+
+/* calc */
+.calc{background:var(--cd);color:var(--cfg);border-radius:20px;padding:18px 20px;display:grid;gap:10px;max-width:46rem}
+.calc label{font-weight:700}
+.calc input[type=range]{width:100%;accent-color:var(--sun);height:34px}
+.calc output{font-family:var(--fd);font-weight:800;font-size:1.5rem}
+.rowc{display:flex;flex-wrap:wrap;gap:20px 36px}
+.note{font-size:.88rem;color:var(--mu);margin:0}
+
+/* compare */
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:16px}
+.vs .cd h3{font-size:1.5rem}
+.vs ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.vs li{display:flex;gap:10px;align-items:flex-start}
+.vs li::before{content:"";flex:none;width:9px;height:9px;border-radius:50%;background:var(--red);margin-top:.55em}
+.t-red .vs li::before{background:#fff}
+
+/* check */
+.chk{display:grid;gap:12px;max-width:52rem}
+.cq{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;background:var(--cd);color:var(--cfg);border-radius:18px;padding:14px 18px}
+.cq>span{flex:1 1 18rem;font-size:1.08rem;line-height:1.4}
+.seg{display:flex;gap:6px}
+.seg button{min-height:46px;min-width:4.4rem;border-radius:12px;border:2px solid var(--ln);background:transparent;font-weight:700;padding:0 14px;transition:background .15s,border-color .15s,color .15s}
+.seg button:hover{border-color:var(--red)}
+.seg button[aria-pressed="true"]{color:#fff;border-color:transparent}
+.seg button[data-v="y"][aria-pressed="true"]{background:var(--leaf)}
+.seg button[data-v="m"][aria-pressed="true"]{background:#B07A00}
+.seg button[data-v="n"][aria-pressed="true"]{background:var(--red)}
+
+/* hub */
+.hubgrid{display:grid;gap:12px;max-width:62rem}
+.hc{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:16px;align-items:center;background:var(--cd);color:var(--cfg);border-radius:20px;padding:14px 16px 14px 14px;border:2px solid transparent;transition:border-color .2s,transform .2s}
+.hc.moved{animation:pop .5s}
+@keyframes pop{40%{transform:scale(1.025);border-color:var(--sun)}}
+.hc:hover{border-color:var(--red)}
+.rk{width:42px;height:42px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:1.2rem}
+.hc.done .rk{background:var(--leaf)}
+.rk svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.hc .tx{min-width:0}
+.hc .ph{font-family:var(--fd);font-size:1.35rem;font-weight:700;line-height:1.1}
+.hc .ps{font-size:.95rem;color:var(--mu)}
+.hc .hq{font-size:.98rem;margin-top:2px}
+.ctl{display:flex;gap:8px;align-items:center}
+.mv{width:46px;height:46px;border-radius:12px;border:2px solid var(--ln);background:transparent;display:grid;place-items:center;transition:background .15s,border-color .15s}
+.mv:hover:not([disabled]){background:var(--red);border-color:var(--red);color:#fff}
+.mv[disabled]{opacity:.25;pointer-events:none}
+.mv svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.open{min-height:46px;border:0;border-radius:12px;background:var(--red);color:#fff;font-weight:700;padding:0 18px;white-space:nowrap}
+.hc.done .open{background:transparent;color:var(--cfg);border:2px solid var(--ln)}
+.ltc{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;border:2px dashed var(--ln);border-radius:20px;padding:14px 18px;max-width:62rem}
+.ltc.ready{border-style:solid;border-color:var(--red);background:var(--cd)}
+.hint{font-size:.95rem;color:var(--mu);margin:0}
+@media (max-width:46rem){.hc{grid-template-columns:auto minmax(0,1fr);}.hc .ctl{grid-column:1/-1;justify-content:flex-end}}
+
+/* end + final */
+.ends{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:16px}
+.tk{background:var(--cd);color:var(--cfg);border-radius:18px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;font-size:1.05rem;line-height:1.45}
+.tk .ck{margin-top:2px}
+.ck{flex:none;width:28px;height:28px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.ck svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.tobe{background:var(--cd);color:var(--cfg);border-radius:18px;padding:16px 20px}
+.tobe h3{margin:0 0 6px;font-family:var(--fd);font-size:1.15rem;color:var(--acc)}
+.tobe ul{margin:0;padding-left:1.2em;display:grid;gap:4px}
+.cta{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--red);border:0;border-radius:999px;min-height:56px;padding:0 28px;font-weight:700;font-size:1.1rem;transition:transform .2s,box-shadow .2s}
+.cta:hover{transform:scale(1.05);box-shadow:0 12px 26px -10px rgba(0,0,0,.5)}
+.cta.red{background:var(--red);color:#fff}
+.cta svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ft{margin-top:auto;padding-top:6px;font-size:.85rem;color:var(--mu)}
+[id^="dyn-"]{display:flex;flex-direction:column;gap:22px;flex:1}
+
+@media (max-width:56rem){
+  .nb2{min-width:0;padding:0 16px}
+  .steps{display:none}
+  .nb2.pri{flex:1}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .on .fill{transition:none}
+}
+/* riepilogo finale */
+.ranks{display:grid;gap:10px;max-width:52rem}
+.rank{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start;background:var(--cd);color:var(--cfg);border-radius:18px;padding:14px 18px}
+.rn{width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--fd);font-weight:800}
+.rt{min-width:0}
+.rh{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline}
+.rh b{font-family:var(--fd);font-size:1.2rem}
+.rsub{color:var(--mu);font-size:.92rem}
+.rank ul{margin:6px 0 0;padding-left:1.2em;display:grid;gap:3px}
+.rank .rs{margin:6px 0 0;color:var(--mu)}
+#calm-in{accent-color:var(--red)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:14px;max-width:52rem}
+.nt{display:grid;gap:6px;min-width:0}
+.nt label{font-weight:700}
+.nt textarea{width:100%;min-height:6.5rem;resize:vertical;border-radius:14px;border:1.5px solid var(--ln);background:var(--cd);color:var(--cfg);padding:12px 14px;font:inherit;line-height:1.4}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.actions .pill{min-height:56px;padding:0 22px;font-size:1rem}
+.dlst{margin:0;min-height:1.4em;font-size:.95rem;color:var(--mu)}
+.nt.cl{max-width:26rem}
+.nt input[type=text]{width:100%;min-height:3rem;border-radius:14px;border:1.5px solid var(--ln);background:var(--cd);color:var(--cfg);padding:0 14px;font:inherit}
+#fsBtn{padding:8px 12px}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<symbol id="i-family" viewBox="0 0 300 260">
+  <ellipse cx="150" cy="238" rx="125" ry="9" fill="#000" opacity=".13"/>
+  <path d="M150 62c-9-15-31-7-27 10 3 11 17 21 27 29 10-8 24-18 27-29 4-17-18-25-27-10z" fill="#C41A16"/>
+  <rect x="40" y="122" width="62" height="108" rx="31" fill="#C41A16"/>
+  <circle cx="71" cy="96" r="28" fill="#F2C6A0"/>
+  <path d="M43 94A28 28 0 0 1 99 94Q71 82 43 94Z" fill="#3B2A20"/>
+  <circle cx="62" cy="99" r="2.4" fill="#1F2A44"/><circle cx="80" cy="99" r="2.4" fill="#1F2A44"/>
+  <path d="M64 108q7 6 14 0" stroke="#1F2A44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <rect x="198" y="122" width="62" height="108" rx="31" fill="#1F2A44"/>
+  <circle cx="229" cy="96" r="28" fill="#F2C6A0"/>
+  <path d="M201 94A28 28 0 0 1 257 94Q229 82 201 94Z" fill="#7B4B2A"/>
+  <circle cx="220" cy="99" r="2.4" fill="#1F2A44"/><circle cx="238" cy="99" r="2.4" fill="#1F2A44"/>
+  <path d="M222 108q7 6 14 0" stroke="#1F2A44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <rect x="119" y="176" width="62" height="54" rx="28" fill="#FFC93C"/>
+  <circle cx="150" cy="158" r="23" fill="#F2C6A0"/>
+  <path d="M127 156A23 23 0 0 1 173 156Q150 146 127 156Z" fill="#C47A3D"/>
+  <circle cx="142" cy="161" r="2" fill="#1F2A44"/><circle cx="158" cy="161" r="2" fill="#1F2A44"/>
+  <path d="M144 169q6 5 12 0" stroke="#1F2A44" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+</symbol>
+<symbol id="i-car" viewBox="0 0 300 260">
+  <path d="M150 8l46 16v38q0 28-46 52-46-24-46-52V24z" fill="#1F2A44"/>
+  <path d="M128 60l16 16 30-34" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 176q0-28 30-34l30-30q9-8 20-8h56q11 0 19 9l28 30q15 4 15 24v18H42z" fill="#C41A16"/>
+  <path d="M96 140l24-24h30v24zM164 116h14q6 0 10 6l16 18h-40z" fill="#CFE6F5"/>
+  <circle cx="92" cy="198" r="28" fill="#1F2A44"/><circle cx="92" cy="198" r="11" fill="#CFD3DB"/>
+  <circle cx="214" cy="198" r="28" fill="#1F2A44"/><circle cx="214" cy="198" r="11" fill="#CFD3DB"/>
+  <rect x="28" y="206" width="250" height="16" rx="8" fill="#1F2A44"/>
+  <circle cx="262" cy="168" r="6" fill="#FFC93C"/>
+</symbol>
+<symbol id="i-house" viewBox="0 0 300 260">
+  <path d="M150 6l36 12v28q0 20-36 36-36-16-36-36V18z" fill="#1F2A44"/>
+  <path d="M134 40l12 12 22-26" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="208" y="56" width="24" height="44" fill="#8C1410"/>
+  <path d="M34 128L150 42l116 86z" fill="#C41A16"/>
+  <rect x="62" y="128" width="176" height="86" fill="#FFF3E3"/>
+  <rect x="78" y="144" width="38" height="34" rx="5" fill="#CFE6F5"/><rect x="184" y="144" width="38" height="34" rx="5" fill="#CFE6F5"/>
+  <rect x="131" y="162" width="38" height="52" rx="5" fill="#1F2A44"/>
+  <rect x="246" y="176" width="9" height="40" fill="#8A5A3B"/><circle cx="250" cy="158" r="26" fill="#4CAF7A"/>
+  <rect x="28" y="212" width="244" height="14" rx="7" fill="#4CAF7A"/>
+</symbol>
+<symbol id="i-doctor" viewBox="0 0 300 260">
+  <ellipse cx="150" cy="240" rx="108" ry="9" fill="#000" opacity=".13"/>
+  <circle cx="150" cy="72" r="38" fill="#F2C6A0"/>
+  <path d="M112 72q-2-34 36-34 40 0 40 36-20-24-76-2z" fill="#6E4325"/>
+  <circle cx="137" cy="76" r="2.6" fill="#1F2A44"/><circle cx="163" cy="76" r="2.6" fill="#1F2A44"/>
+  <path d="M141 88q9 7 18 0" stroke="#1F2A44" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <rect x="92" y="124" width="116" height="112" rx="48" fill="#fff" stroke="#E3E6EC" stroke-width="4"/>
+  <path d="M120 128v38q0 32 30 32t30-32v-38" stroke="#1F2A44" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="150" cy="200" r="12" fill="#1F2A44"/>
+  <rect x="184" y="186" width="24" height="7" rx="2" fill="#C41A16"/><rect x="192.5" y="177.500" width="7" height="24" rx="2" fill="#C41A16"/>
+</symbol>
+<symbol id="i-piggy" viewBox="0 0 300 260">
+  <ellipse cx="150" cy="240" rx="120" ry="9" fill="#000" opacity=".13"/>
+  <circle cx="148" cy="48" r="30" fill="#FFC93C" stroke="#E5A800" stroke-width="6"/>
+  <text x="148" y="60" font-size="34" font-weight="700" text-anchor="middle" fill="#B8860B" font-family="Georgia,serif">€</text>
+  <rect x="104" y="188" width="24" height="42" rx="9" fill="#E88AA0"/><rect x="172" y="188" width="24" height="42" rx="9" fill="#E88AA0"/>
+  <path d="M66 150q-26-6-22-28" stroke="#E88AA0" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <ellipse cx="140" cy="148" rx="86" ry="62" fill="#F5A3B5"/>
+  <path d="M96 100l8-30 34 22zM176 94l22-28 12 40z" fill="#E88AA0"/>
+  <rect x="118" y="100" width="44" height="8" rx="4" fill="#1F2A44"/>
+  <ellipse cx="232" cy="156" rx="22" ry="16" fill="#E88AA0"/>
+  <circle cx="226" cy="156" r="3" fill="#1F2A44"/><circle cx="238" cy="156" r="3" fill="#1F2A44"/>
+  <circle cx="198" cy="126" r="6" fill="#1F2A44"/>
+</symbol>
+<symbol id="i-elders" viewBox="0 0 300 260">
+  <ellipse cx="150" cy="240" rx="120" ry="9" fill="#000" opacity=".13"/>
+  <path d="M236 40c-8-14-28-6-25 9 3 10 15 19 25 27 10-8 22-17 25-27 3-15-17-23-25-9z" fill="#C41A16"/>
+  <rect x="62" y="140" width="94" height="94" rx="42" fill="#4CAF7A"/>
+  <circle cx="108" cy="96" r="36" fill="#F2C6A0"/>
+  <path d="M72 92q0-38 38-38t36 36q-18-14-40-12-20 0-34 14z" fill="#D9DEE6"/>
+  <circle cx="94" cy="100" r="11" fill="none" stroke="#1F2A44" stroke-width="3.5"/><circle cx="122" cy="100" r="11" fill="none" stroke="#1F2A44" stroke-width="3.5"/>
+  <path d="M105 100h6" stroke="#1F2A44" stroke-width="3"/>
+  <path d="M98 116q10 8 20 0" stroke="#1F2A44" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M176 232V150q0-14 16-16" stroke="#8A5A3B" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <rect x="196" y="156" width="64" height="76" rx="30" fill="#C41A16"/>
+  <circle cx="228" cy="128" r="26" fill="#F2C6A0"/>
+  <path d="M202 126A26 26 0 0 1 254 126Q228 116 202 126Z" fill="#3B2A20"/>
+  <circle cx="220" cy="131" r="2.2" fill="#1F2A44"/><circle cx="237" cy="131" r="2.2" fill="#1F2A44"/>
+  <path d="M221 140q7 5 14 0" stroke="#1F2A44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+</symbol>
+<symbol id="i-calendar" viewBox="0 0 300 260">
+  <rect x="50" y="52" width="170" height="160" rx="18" fill="#fff" stroke="#E3E6EC" stroke-width="4"/>
+  <path d="M50 70a18 18 0 0 1 18-18h134a18 18 0 0 1 18 18v22H50z" fill="#C41A16"/>
+  <rect x="86" y="30" width="11" height="34" rx="5.500" fill="#1F2A44"/><rect x="174" y="30" width="11" height="34" rx="5.500" fill="#1F2A44"/>
+  <g fill="#E8EAEF"><rect x="68" y="108" width="30" height="24" rx="5"/><rect x="172" y="108" width="30" height="24" rx="5"/><rect x="104" y="148" width="30" height="24" rx="5"/><rect x="172" y="148" width="30" height="24" rx="5"/></g>
+  <g fill="#F7B8B3"><rect x="104" y="108" width="30" height="24" rx="5"/><rect x="138" y="108" width="30" height="24" rx="5"/><rect x="68" y="148" width="30" height="24" rx="5"/><rect x="68" y="182" width="30" height="20" rx="5"/><rect x="138" y="182" width="30" height="20" rx="5"/></g>
+  <circle cx="216" cy="186" r="44" fill="#FFC93C" stroke="#1F2A44" stroke-width="8"/>
+  <path d="M216 158v30l22 12" stroke="#1F2A44" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="c-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.400 8.700 8 11 4.600-2.300 8-6 8-11V5z" fill="#fff"/></symbol>
+<symbol id="c-heart" viewBox="0 0 24 24"><path d="M12 21s-8-5.200-8-11.200C4 6.500 6.500 4.500 9 4.500c1.400 0 2.600.7 3 1.800.4-1.100 1.600-1.800 3-1.800 2.500 0 5 2 5 5.300C20 15.800 12 21 12 21z" fill="#fff"/></symbol>
+<symbol id="c-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 6v6l4 2.500" stroke="#C41A16" stroke-width="2.400" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="c-euro" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><text x="12" y="17.200" font-size="14" font-weight="700" text-anchor="middle" fill="#C41A16" font-family="Georgia,serif">€</text></symbol>
+<symbol id="c-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.500" fill="#fff"/><path d="M3.500 21c0-4.600 3.800-7.500 8.500-7.500s8.500 2.900 8.500 7.500z" fill="#fff"/></symbol>
+<symbol id="c-home" viewBox="0 0 24 24"><path d="M12 3 2 12h3v9h5v-6h4v6h5v-9h3z" fill="#fff"/></symbol>
+<symbol id="c-doc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.500" fill="#fff"/><path d="M8.500 8.500h7M8.500 12h7M8.500 15.500h4" stroke="#C41A16" stroke-width="1.800" stroke-linecap="round"/></symbol>
+<symbol id="c-drop" viewBox="0 0 24 24"><path d="M12 2C9 7 6 10.500 6 14.500a6 6 0 0 0 12 0C18 10.500 15 7 12 2z" fill="#fff"/></symbol>
+<symbol id="c-warn" viewBox="0 0 24 24"><path d="M12 2.500 22.500 20.500h-21z" fill="#fff"/><path d="M12 9v5.500" stroke="#C41A16" stroke-width="2.400" stroke-linecap="round"/><circle cx="12" cy="17.500" r="1.400" fill="#C41A16"/></symbol>
+</defs>
+</svg>
+
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Percorso"></aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="top">
+      <div class="toprow">
+        <button class="pill" id="menuBtn" type="button" data-act="menu" aria-expanded="false" aria-controls="rail"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+        
+        <span class="where" id="where" aria-live="polite"></span>
+        <span class="sp"></span>
+        <button class="pill" id="fsBtn" type="button" aria-label="Schermo intero" title="Schermo intero" hidden></button>
+        <button class="pill" id="homeBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="3.500" width="7" height="7" rx="1.500"/><rect x="13.500" y="3.500" width="7" height="7" rx="1.500"/><rect x="3.500" y="13.500" width="7" height="7" rx="1.500"/><rect x="13.500" y="13.500" width="7" height="7" rx="1.500"/></svg>Panoramica</button>
+      </div>
+      <div class="prog"><i id="progi"></i></div>
+    </header>
+    <main class="stage" id="stage"><div id="deck"></div></main>
+    <footer class="nav">
+      <div class="navrow">
+        <button class="nb2 sec" id="prev" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Indietro</button>
+        <div class="steps" id="steps" aria-hidden="true"></div>
+        <button class="nb2 pri" id="next" type="button"><span id="nextl">Avanti</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </footer>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* Dati e fonti: quelli del PDF originale. Testi riscritti in linguaggio semplice e senza prodotti specifici. */
+const INTRO=[
+{y:"hero",th:"red",k:"La tua consulenza personale",t:"Proteggi oggi ciò\nche conta domani",sub:"Un percorso semplice, senza paroloni: capiamo da cosa puoi proteggerti e da dove ha senso partire.",ill:"family",cta:"Iniziamo"},
+{y:"cards",th:"dark",k:"Chi siamo",t:"Con chi parliamo oggi",ill:"family",src:"Fonti: ANIA, premi 2025; TIME e Statista, World’s Best Companies 2026",c:[
+ {ic:"shield",h:"Prima compagnia assicurativa in Italia",p:"È la prima compagnia assicurativa del Paese per premi raccolti.",n:"1ª",l:"nella graduatoria ANIA dei premi 2025"},
+ {ic:"heart",h:"Tra le migliori aziende al mondo",p:"Su 1.000 aziende di tutti i settori, valutate per soddisfazione dei dipendenti, crescita dei ricavi e trasparenza sulla sostenibilità.",n:"18ª",l:"World’s Best Companies 2026 (TIME e Statista)"},
+ {ic:"home",h:"La nostra Agenzia",p:"Una presenza solida sul territorio, tra le prime agenzie in Italia.",n:"Tra le prime",l:"agenzie in Italia"}]},
+{y:"learn",th:"cream",k:"Prima di cominciare",t:"Come funziona un'assicurazione",ill:"family",
+ lead:"Paghi una somma piccola e regolare. In cambio, se succede qualcosa di grave e costoso, il peso economico non cade tutto su di te. Tante persone versano un po' in un fondo comune e chi ha un problema viene aiutato.",
+ terms:[["Rischio","Un evento che può succedere e costarti caro: un incidente, una malattia, un incendio."],["Premio","Quello che paghi, ogni mese o ogni anno, per essere protetto."],["Polizza","Il contratto. Dice cosa è coperto, fino a quanto e per quanto tempo."],["Sinistro","Il nome tecnico dell'evento che succede, per cui chiedi l'intervento."]]},
+{y:"cards",th:"dark",k:"Perché parlarne adesso",t:"Tre buoni motivi per non rimandare",ill:"family",c:[
+ {ic:"warn",h:"I rischi non avvisano",p:"Incidenti, malattie e imprevisti arrivano senza preavviso, quasi sempre nel momento peggiore."},
+ {ic:"euro",h:"Prima si inizia, meglio è",p:"Di solito il costo di una protezione dipende da età e salute: da giovani è più semplice e più leggero."},
+ {ic:"clock",h:"Il tempo lavora per te",p:"Per la pensione ogni anno di versamenti in più conta. Aspettare costa."}]}
+];
+
+const CHAP={
+pat:{name:"Patrimonio",sub:"Casa e auto",ic:"home",ill:"house",hook:"Se domani causi un incidente o la casa prende fuoco, chi paga?",
+ take:["L'RC Auto è obbligatoria e paga i danni che causi agli altri, non quelli alla tua auto.","Il mutuo ti lega a una polizza sulla casa: incendio e scoppio sono il minimo, ma grandine e maltempo colpiscono sempre più spesso.","Le garanzie in più (furto, cristalli, assistenza) proteggono te e il tuo veicolo."],
+ slides:[
+ {y:"hero",th:"red",k:"Patrimonio · Auto",t:"Se domani causi un incidente,\nchi paga?",ill:"car"},
+ {y:"learn",th:"cream",k:"Auto",t:"RC Auto: l'assicurazione che la legge ti obbliga ad avere",ill:"car",
+  lead:"L'RC Auto paga i danni che causi agli altri con il tuo veicolo: persone ferite, auto e cose danneggiate. Non paga i danni alla tua auto, né le tue spese se sei tu il responsabile.",
+  terms:[["Responsabilità civile","L'obbligo di risarcire chi hai danneggiato per colpa tua."],["Massimale","Il tetto massimo che l'assicurazione paga per un sinistro."],["Garanzie accessorie","Coperture in più, facoltative, che aggiungi alla RC Auto."]]},
+ {y:"big",th:"cream",k:"Auto",t:"Veicoli senza RC Auto valida",big:"9 mln",sub:"su 47 milioni di veicoli censiti: circa 1 su 5 gira senza l'unica assicurazione obbligatoria.",ill:"car",src:"Fonti: ANIA/MIT lug 2026; Open 17/11/2025; Segugio.it",
+  st:[{n:"37%",l:"veicoli senza copertura a Napoli (stima ANIA)"},{n:"1,2 mld €",l:"premi evasi nel 2023 (Segugio)"},{n:"6,1%",l:"quota auto non assicurate nel 2024, era 5,2% nel 2021"}]},
+ {y:"story",th:"dark",k:"Immagina la scena",t:"Un attimo di distrazione",ill:"car",tag:"Esempio immaginario",steps:[
+  "Sei in ritardo, guardi il telefono un secondo e tamponi un'auto ferma al semaforo.",
+  "Nell'auto ci sono tre persone. Serve il pronto soccorso e il veicolo è da rottamare.",
+  "Se la tua RC Auto non è valida, il risarcimento lo paghi tu: con i tuoi risparmi e i tuoi beni, senza un limite.",
+  "Se è valida, se ne occupa l'assicurazione. Se non lo è, resti solo."]},
+ {y:"cards",th:"dark",k:"Chi paga?",t:"Se causi un incidente senza copertura",ill:"car",src:"Fonti: Milano Finanza 28/2/2026; Open; ANIA/MIT",c:[
+  {ic:"euro",h:"Paghi tu",p:"I danni a terzi ricadono sul tuo patrimonio, senza limite.",n:"437 €",l:"premio medio annuo RC auto (IVASS, set 2025)"},
+  {ic:"warn",h:"Sanzioni",p:"Multa, sequestro del veicolo e punti patente in meno.",n:"5 punti",l:"tolti alla patente"},
+  {ic:"user",h:"Vittime senza tutela",p:"Risarcimenti lunghi e complessi se il responsabile è scoperto.",n:"1 su 5",l:"veicoli senza RC valida"}]},
+ {y:"news",th:"cream",k:"Non è teoria",t:"Auto non assicurate: cosa dicono le notizie",ill:"car",src:"Fonti: finanza.com, Open, InMoto",c:[
+  {s:"FINANZA.COM · 3 NOV 2026",h:"Dal 2027 controlli automatici contro chi circola senza RC",p:"Misura annunciata da MIT e ACI per individuare i veicoli scoperti.",n:"9 mln"},
+  {s:"OPEN · 17 NOV 2025",h:"Quasi 3 milioni di auto senza assicurazione sulle strade",p:"Il fenomeno cresce anche al Nord: Aosta all'11,3%, Milano al 7,2%.",n:"11,3%"},
+  {s:"INMOTO · 6 LUG 2026",h:"Troppi veicoli senza assicurazione: la stretta del MIT",p:"Dati presentati all'assemblea annuale ANIA.",n:"47 mln"}]},
+ {y:"hero",th:"red",k:"Patrimonio · Casa",t:"E se la casa che\nstai pagando non ci\nfosse più?",ill:"house"},
+ {y:"big",th:"red",k:"Casa",t:"Mutuo e polizza incendio",big:"Obbligo",sub:"di fatto: per concedere il mutuo la banca richiede una copertura contro scoppio e incendio. Senza polizza, niente mutuo.",ill:"house",src:"Prassi bancaria",
+  st:[{n:"30 anni",l:"durata tipica di un mutuo"},{n:"1",l:"il bene più grande della vita"},{n:"100%",l:"del debito resta anche se la casa brucia"}]},
+ {y:"big",th:"dark",k:"Casa · Cambiamento climatico",t:"A Brescia la grandine è sempre più forte",big:"950",sub:"eventi di grandine in 758 comuni italiani nei soli primi cinque mesi del 2026, prima ancora dell’estate. Brescia è stata la provincia più colpita per danni alle auto.",ill:"house",src:"Fonti: Osservatorio Verti Movers (Giornale di Brescia); CNR-ISAC, citato da Verti; Coldiretti Brescia; InMeteo",
+  st:[{n:"+30%",l:"grandinate estreme in vent’anni nel Mediterraneo (CNR-ISAC)"},{n:"5 cm",l:"chicchi sulla Bassa Bresciana il 28 maggio 2026"},{n:"6-8 cm",l:"chicchi su Brescia città a fine agosto 2026"}]},
+ {y:"story",th:"red",k:"Immagina la scena",t:"Una sera d’estate a Brescia",ill:"house",tag:"Esempio immaginario",steps:[
+  "Un temporale arriva in pochi minuti. Poi inizia la grandine: chicchi grandi come palline da golf.",
+  "Tapparelle e finestre si rompono, le tegole cedono, i pannelli solari si crepano. L’acqua entra in casa.",
+  "La mattina dopo conti i danni: tetto, infissi, soffitti, mobili e anche l’auto in cortile.",
+  "Con una polizza adatta, il danno viene indennizzato nei limiti del contratto. Senza, riparare è a carico tuo e il mutuo continua."]},
+ {y:"cards",th:"cream",k:"Rischi",t:"Cosa può succedere alla tua casa",ill:"house",c:[
+  {ic:"drop",h:"Incendio e scoppio",p:"Il danno è tuo e il mutuo resta da pagare, anche se la casa non c'è più."},
+  {ic:"warn",h:"Grandine e maltempo",p:"Tetto, finestre, pannelli solari, cantine: temporali violenti e grandinate sono sempre più frequenti.",n:"52,1%",l:"case assicurate contro l’incendio, ma solo il 7,3% contro le catastrofi naturali (ANIA, mar 2026)"},
+  {ic:"user",h:"Responsabilità civile",p:"Danni involontari ai vicini o a terzi.",n:"Illimitata",l:"responsabilità sul tuo patrimonio"}]},
+ {y:"solve",th:"cream",k:"Cosa puoi fare",t:"Le soluzioni, in parole semplici",ill:"house",c:[
+  {ic:"shield",h:"RC Auto con massimale adeguato",p:"L'obbligo di base. Il massimale è il tetto di quanto viene pagato: meglio che sia alto.",eg:"Serve sempre, per legge."},
+  {ic:"home",h:"Garanzie in più per l'auto",p:"Furto e incendio, cristalli, danni alla tua auto anche se la colpa è tua, assistenza stradale, infortuni del conducente.",eg:"Serve se l'auto ha valore per te."},
+  {ic:"drop",h:"Polizza per la casa",p:"Incendio e scoppio, furto, danni d'acqua, grandine e altri eventi atmosferici. Con il mutuo, la banca chiede almeno incendio e scoppio.",eg:"Serve a proteggere il tuo bene più grande."},
+  {ic:"user",h:"Responsabilità civile della famiglia",p:"Paga i danni involontari che tu o chi vive con te causate a terzi.",eg:"Serve per gli imprevisti di tutti i giorni."}]},
+ {y:"check",th:"cream",k:"Dove sei oggi?",t:"Segna la tua situazione",items:["La mia auto ha una RC Auto valida","Ho garanzie oltre la RC (furto, incendio, assistenza…)","La casa in cui vivo è assicurata contro incendio, grandine e maltempo","So cosa è coperto e cosa no nelle mie polizze"]},
+ {y:"end"}]},
+
+fam:{name:"Famiglia",sub:"Protezione del reddito (TCM)",ic:"user",ill:"family",hook:"Se mancasse un reddito, la tua famiglia ce la farebbe?",
+ take:["Se manca un reddito, le spese non si dimezzano: mutuo, bollette e scuola restano.","Una TCM è un capitale che arriva a chi scegli tu, per il periodo che serve.","Si decide quando si sta bene, non quando serve."],
+ slides:[
+ {y:"hero",th:"red",k:"Famiglia",t:"Se mancasse un\nreddito, la tua\nfamiglia ce\nla farebbe?",ill:"family"},
+ {y:"cards",th:"red",k:"Famiglia",t:"Se manca uno dei due redditi",ill:"family",c:[
+  {ic:"heart",h:"Coppia",p:"Il reddito che resta basta per mutuo e spese?",n:"2 redditi",l:"1 sola famiglia da sostenere"},
+  {ic:"user",h:"Figli",p:"Studi, sport, serenità: da garantire anche dopo."},
+  {ic:"home",h:"Mutuo",p:"Spesso la banca chiede o consiglia una polizza vita collegata al mutuo."}]},
+ {y:"calc",th:"dark",k:"Fai il conto",t:"Per quanto tempo reggerebbe la tua famiglia?",ill:"family",id:"runway"},
+ {y:"story",th:"cream",k:"Immagina la scena",t:"Due stipendi, un mutuo",ill:"family",tag:"Esempio immaginario",steps:[
+  "Una famiglia vive con due stipendi e paga un mutuo. Tutto torna, ogni mese.",
+  "Un giorno uno dei due non c'è più. Il dolore è enorme e i conti non si fermano.",
+  "Mutuo, bollette e scuola restano uguali, ma il reddito si riduce.",
+  "Con una TCM arriva un capitale a chi hai scelto: serve a chiudere il mutuo, pagare gli studi e dare tempo di riorganizzarsi."]},
+ {y:"learn",th:"cream",k:"Famiglia",t:"La temporanea caso morte (TCM)",ill:"family",
+  lead:"Paghi un premio contenuto per un periodo che scegli, per esempio finché hai il mutuo o i figli piccoli. Se in quel periodo la persona assicurata muore, un capitale arriva a chi hai indicato tu. Se non succede nulla, il contratto finisce.",
+  terms:[["Capitale","La somma che viene pagata se l'evento si verifica."],["Beneficiario","La persona che scegli tu per ricevere il capitale."],["Durata","Il periodo in cui sei protetto, deciso da te."]]},
+ {y:"solve",th:"cream",k:"Cosa puoi fare",t:"Le soluzioni, in parole semplici",ill:"family",src:"Fonte: Art. 1923 c.c.",c:[
+  {ic:"heart",h:"Temporanea caso morte (TCM)",p:"Un capitale a chi decidi tu, con un premio contenuto, per il periodo che serve.",eg:"Serve se qualcuno dipende dal tuo reddito."},
+  {ic:"home",h:"Protezione legata al mutuo",p:"Il capitale può estinguere il debito con la banca, così la casa resta alla famiglia.",eg:"Serve se hai o stai per avere un mutuo."},
+  {ic:"shield",h:"Tutela per i beneficiari",p:"Nei limiti di legge, il capitale pagato ai beneficiari è protetto dai creditori.",eg:"Serve a far arrivare il capitale a chi vuoi."}]},
+ {y:"check",th:"cream",k:"Dove sei oggi?",t:"Segna la tua situazione",items:["Ci sono persone che dipendono economicamente da me","So quanto servirebbe loro per vivere un anno","Ho una protezione se dovessi mancare io","Ho scelto chi riceverebbe il capitale"]},
+ {y:"end"}]},
+
+sal:{name:"Salute",sub:"Infortuni e malattia",ic:"heart",ill:"doctor",hook:"Quanto puoi aspettare per curarti?",
+ take:["Aspettare ha un costo: tempo, salute e spesso anche soldi.","Infortunio e malattia sono due rischi diversi, con coperture diverse.","Una protezione ti dà una scelta in più su dove e quando curarti."],
+ slides:[
+ {y:"hero",th:"red",k:"Salute",t:"Quanto puoi aspettare\nper curarti?",ill:"doctor"},
+ {y:"learn",th:"cream",k:"Salute",t:"Infortunio e malattia non sono la stessa cosa",ill:"doctor",
+  lead:"Si proteggono con coperture diverse. Per questo è utile capire la differenza prima di scegliere.",
+  terms:[["Infortunio","Un evento improvviso ed esterno che ti fa male: una caduta, un incidente in bici, lo sport."],["Malattia","Un problema di salute che non nasce da un infortunio."],["Rimborso spese mediche","L'assicurazione ti restituisce, nei limiti del contratto, i costi di visite, esami e ricoveri."],["Invalidità permanente","Una riduzione stabile delle tue capacità fisiche dopo un infortunio."]]},
+ {y:"big",th:"dark",k:"Salute",t:"Italiani che rinunciano alle cure",big:"6 mln",sub:"1 italiano su 10 rinuncia a visite o terapie: per attese, costi o distanze.",ill:"doctor",src:"Fonti: Istat 2025; indagine FortuneITA 2026",
+  st:[{n:"80%",l:"di chi rinuncia salta visite specialistiche (2025)"},{n:"63%",l:"lo fa per i tempi d'attesa"},{n:"62%",l:"lo fa per i costi del privato"}]},
+ {y:"bars",th:"cream",k:"Liste d'attesa",t:"Attesa media per una prestazione",ill:"calendar",src:"Fonte: indagine citata da FortuneITA 2026",foot:"Una diagnosi in ritardo di tre mesi può cambiare tutto.",r:[{l:"Sanità pubblica",v:87,t:"87 giorni",c:"red"},{l:"Sanità privata",v:18,t:"18 giorni",c:"navy"}]},
+ {y:"big",th:"red",k:"Il servizio sanitario in affanno",t:"Prestazioni fuori dai tempi garantiti",big:"2,8 mln",sub:"nel primo semestre 2026: le liste migliorano, ma l'emergenza non è superata.",ill:"calendar",src:"Fonte: Agenas, 2026",
+  st:[{n:"1,6 mln",l:"prestazioni in più entro i tempi"},{n:"2,8 mln",l:"ancora fuori soglia"}]},
+ {y:"big",th:"cream",k:"Spesa privata",t:"Quanto pagano le famiglie di tasca propria",big:"1/4",sub:"della spesa sanitaria italiana è privata (out of pocket); in Germania e Francia circa un decimo.",ill:"doctor",src:"Fonti: il manifesto/Istat 2025; Censis-Rbm",
+  st:[{n:"146",l:"spesa privata di un anziano fatta 100 la media"},{n:"1/10",l:"spesa privata in Germania e Francia"},{n:"15%",l:"soglia OMS: oltre è a rischio l'equità delle cure"}]},
+ {y:"news",th:"cream",k:"Non è teoria",t:"La sanità pubblica sotto pressione",ill:"doctor",src:"Fonti: il manifesto, Quotidiano Sanità, QuiFinanza",c:[
+  {s:"IL MANIFESTO · 27 NOV 2025",h:"La sanità pubblica si restringe: sei milioni rinunciano",p:"Dati Istat: uno su dieci rinuncia alle cure.",n:"6 mln"},
+  {s:"QUOTIDIANO SANITÀ · 2026",h:"Liste d'attesa: restano 2,8 milioni di prestazioni fuori soglia",p:"Report Agenas sul primo semestre 2026.",n:"2,8 mln"},
+  {s:"QUIFINANZA · CENSIS-AIOP",h:"Sanità divisa per censo: il 42% rinuncia",p:"Chi non può pagare il privato resta in lista d'attesa.",n:"42%"}]},
+ {y:"story",th:"dark",k:"Immagina la scena",t:"Un esame che non può aspettare",ill:"doctor",tag:"Esempio immaginario",steps:[
+  "Hai un dolore che non passa. Il medico ti prescrive un esame.",
+  "Nella sanità pubblica l'attesa media è di 87 giorni. Nella privata, 18.",
+  "Una diagnosi in ritardo di tre mesi può cambiare tutto. Intanto vivi con la preoccupazione.",
+  "Pagare il privato di tasca tua non è possibile per tutti: il 62% di chi rinuncia alle cure lo fa per i costi."]},
+ {y:"solve",th:"cream",k:"Cosa puoi fare",t:"Le soluzioni, in parole semplici",ill:"doctor",c:[
+  {ic:"warn",h:"Polizza infortuni",p:"Se ti fai male, una somma ti aiuta a coprire le conseguenze, per esempio se resti con un'invalidità permanente.",eg:"Serve se vivi di lavoro e di movimento."},
+  {ic:"heart",h:"Copertura per la malattia",p:"Rimborsa visite, esami e ricoveri anche in strutture private, nei limiti del contratto.",eg:"Serve se non vuoi dipendere dalle liste d'attesa."},
+  {ic:"clock",h:"Accesso rapido alle cure",p:"Scegli dove e quando curarti, senza aspettare i tempi della lista.",eg:"Serve quando il tempo conta."},
+  {ic:"user",h:"Protezione per tutta la famiglia",p:"Puoi includere partner e figli nella stessa protezione.",eg:"Serve se hai persone da curare oltre a te."}]},
+ {y:"check",th:"cream",k:"Dove sei oggi?",t:"Segna la tua situazione",items:["Ho una copertura per gli infortuni, anche fuori dal lavoro","Ho una copertura per visite ed esami privati","So quanto aspetterei per un esame nella mia zona","Ho messo da parte un fondo per cure impreviste"]},
+ {y:"end"}]},
+
+fut:{name:"Futuro",sub:"Previdenza complementare",ic:"clock",ill:"piggy",hook:"Quali sono i progetti per il tuo futuro?",
+ take:["La pensione pubblica coprirà una parte sempre più piccola dell'ultimo stipendio.","Previdenza collettiva e individuale non si escludono: puoi avere entrambe.","Ogni anno di versamenti in più conta: il tempo è il tuo alleato."],
+ slides:[
+ {y:"hero",th:"red",k:"Futuro",t:"Quali sono i progetti\nper il tuo futuro?",ill:"piggy"},
+ {y:"learn",th:"cream",k:"Futuro",t:"Pensione pubblica e pensione complementare",ill:"elders",
+  lead:"La pensione pubblica ti dà un assegno in base ai contributi versati. La previdenza complementare è un risparmio in più, che metti da parte oggi per avere un'integrazione domani.",
+  terms:[["Tasso di sostituzione","Quanto della tua ultima retribuzione copre la pensione. Con il 60%, su 100 € di stipendio ne ricevi 60."],["TFR","La liquidazione che matura ogni anno e ti viene pagata a fine rapporto."],["Deducibilità","I versamenti, nei limiti di legge, si possono dedurre dal reddito: paghi meno tasse."]]},
+ {y:"bars",th:"dark",k:"Pensione",t:"Tasso di sostituzione: padre contro figlio",ill:"elders",src:"Fonte: Quotidiano.net, 2026",foot:"Stessa carriera continua, 17 punti in meno: e per autonomi o carriere discontinue si scende ancora.",r:[{l:"Padre (pensione 2020)",v:81.5,t:"81,5%",c:"navy"},{l:"Figlio (assunto 2022)",v:64.8,t:"64,8%",c:"red"}]},
+ {y:"calc",th:"red",k:"L'esempio",t:"",ill:"piggy",id:"pension",src:"Fonti: Fisco Investimenti 2026; Covip 2025"},
+ {y:"cards",th:"cream",k:"Oggi",t:"Perché la pensione pubblica non basterà",ill:"elders",src:"Fonti: Quotidiano.net, Covip",c:[
+  {ic:"doc",h:"Sistema contributivo",p:"L'assegno dipende dai contributi versati.",n:"65%",l:"tasso di sostituzione dei figli"},
+  {ic:"clock",h:"Carriere discontinue",p:"Precarietà e stipendi bassi riducono l'assegno.",n:"50-60%",l:"tasso per i casi più fragili"},
+  {ic:"euro",h:"Tempo",p:"Ogni anno perso è capitale in meno.",n:"20,8%",l:"aderenti under 35"}]},
+ {y:"cards",th:"dark",k:"I problemi di domani",t:"Tre cose che cambiano il futuro",ill:"piggy",c:[
+  {ic:"euro",h:"Prezzi che salgono",p:"Con l’inflazione la stessa pensione compra, anno dopo anno, sempre meno cose."},
+  {ic:"clock",h:"Si vive più a lungo",p:"Più anni di pensione da finanziare: l’assegno deve durare di più."},
+  {ic:"heart",h:"Spese che crescono con l’età",p:"Salute e assistenza pesano di più proprio quando il reddito cala."}]},
+ {y:"temple",th:"dark",k:"Il progetto",t:"La tua pensione si regge su tre pilastri",hint:"Tocca un pilastro per approfondire",p:[
+  {n:"1° pilastro",h:"Contributi INPS",p:"La pensione pubblica: copre solo una parte dell’ultimo stipendio: circa il 65% con una carriera continua.",anc:"p1"},
+  {n:"2° pilastro",h:"Previdenza complementare collettiva",p:"TFR e versamenti volontari nel fondo pensione.",anc:"p2"},
+  {n:"3° pilastro",h:"Previdenza complementare individuale",p:"Il risparmio che costruiamo noi, con lo strumento giusto.",anc:"p3"}]},
+ {pil:1,anc:"p1",y:"big",th:"cream",k:"1° pilastro · Contributi INPS",t:"La base della pensione",big:"65%",sub:"dell’ultimo stipendio: è quanto può coprire la pensione pubblica per chi è assunto oggi con una carriera continua. Il resto dobbiamo costruirlo noi.",ill:"elders",src:"Fonte: Quotidiano.net, 2026",
+  st:[{n:"50-60%",l:"per autonomi, carriere discontinue e casi più fragili"},{n:"Contributivo",l:"l’assegno dipende da quanto e per quanto tempo versi"}]},
+ {pil:1,y:"solve",th:"dark",k:"1° pilastro · Contributi INPS",t:"Come presidiare il primo pilastro",ill:"elders",c:[
+  {ic:"doc",h:"Controlla i tuoi contributi",p:"Sul sito INPS trovi l’estratto conto contributivo: verifica che sia tutto corretto.",eg:"Primo controllo."},
+  {ic:"clock",h:"Evita i buchi",p:"I periodi senza contributi riducono l’assegno: tienine conto se cambi lavoro o ti metti in proprio.",eg:"Continuità."},
+  {ic:"euro",h:"Stima la tua pensione",p:"Con il simulatore INPS «La mia pensione futura» vedi quanto potresti ricevere e quanto manca.",eg:"Quanto manca."}]},
+ {pil:2,anc:"p2",y:"learn",th:"cream",k:"2° pilastro · Collettiva",t:"La previdenza complementare collettiva",ill:"piggy",
+  lead:"È il fondo pensione legato al tuo lavoro o al tuo contratto. Ci confluiscono il TFR e i versamenti che decidi di fare, e spesso anche un contributo del datore di lavoro.",
+  terms:[["TFR","La liquidazione che matura ogni anno: puoi destinarla al fondo pensione."],["Contributo del datore","Spesso, se versi anche tu, il datore aggiunge una quota: denaro in più che altrimenti non avresti."],["Versamenti volontari","Puoi versare di più quando vuoi: nei limiti di legge sono deducibili dal reddito."]]},
+ {pil:2,y:"big",th:"cream",k:"Il gap",t:"Lavoratori con previdenza complementare",big:"38%",sub:"dei lavoratori attivi è iscritto: circa 10 milioni su 24 milioni di occupati.",ill:"piggy",src:"Fonti: Covip, 2024-25; Marsh CFA 2026",
+  st:[{n:"262 mld €",l:"accumulati nei fondi pensione"},{n:"41°",l:"posto su 55 nel Marsh CFA Pension Index 2026"},{n:"38,8%",l:"tra gli aderenti sono donne"}]},
+ {pil:2,y:"big",th:"red",k:"Novità 2026",t:"Dal 1° luglio 2026 il TFR dei nuovi assunti va al fondo pensione",big:"60 giorni",sub:"per scegliere. Se non dici nulla, scatta l’adesione automatica a un fondo pensione con il tuo TFR.",ill:"piggy",src:"Fonti: Legge di Bilancio 2026; COVIP; QuiFinanza",
+  st:[{n:"1° luglio 2026",l:"vale per i dipendenti del settore privato assunti da questa data (domestici esclusi)"},{n:"Fondo di categoria",l:"è la destinazione predefinita, prevista dal contratto collettivo"},{n:"Puoi rifiutare",l:"entro 60 giorni, scegliendo un altro fondo o il TFR in azienda; poi l’adesione è definitiva"}]},
+ {pil:2,y:"table",th:"dark",k:"TFR",t:"Il tuo TFR può lavorare per te",ill:"piggy",src:"Fonti: art. 2120 c.c.; D.Lgs. 252/2005",cols:["TFR in azienda","TFR in un fondo pensione"],
+  rows:[["Rischio azienda",["Alto","Il TFR resta nel bilancio dell’azienda e ne segue le sorti."],["Nullo","Patrimonio separato: il fondo è distinto dall’azienda."]],
+  ["Interessi",["Solo di legge","1,5% fisso + 75% dell’inflazione: nessuna scelta su come viene investito."],["Rivalutazione","Investito nella linea che scegli, con rendimento legato ai mercati."]],
+  ["Tasse",["~30%","Tassazione piena: in media circa il 30%, secondo il reddito."],["Dal 15% al 9%","Tassazione agevolata: scende con gli anni di iscrizione, fino al 9%."]]],
+  note:"«Nullo» vale per il rischio legato all’azienda: nel fondo resta il rischio di mercato della linea scelta. Valori indicativi."},
+{pil:3,anc:"p3",y:"big",th:"red",k:"3° pilastro · Il risparmio",t:"Dedica una parte del tuo stipendio al futuro",big:"100 €",sub:"al mese per 30 anni, con un rendimento ipotetico del 3% annuo, diventano circa 58.300 €, a fronte di 36.000 € versati.",ill:"piggy",src:"Esempio illustrativo con rendimento ipotetico: non è una previsione né un rendimento garantito.",
+  st:[{n:"36.000 €",l:"versati in 30 anni"},{n:"≈ 32.800 €",l:"se inizi 10 anni dopo, con 20 anni di versamenti"},{n:"Costanza",l:"conta più la regolarità della cifra: meglio poco, ma ogni mese"}]},
+ {pil:3,y:"cards",th:"dark",k:"3° pilastro · Il risparmio",t:"Perché mettere da parte una quota dello stipendio",ill:"piggy",c:[
+  {ic:"euro",h:"Pagati per primo",p:"Metti da parte una quota appena arriva lo stipendio, come fosse una rata: ciò che resta lo spendi."},
+  {ic:"clock",h:"Il tempo è il tuo alleato",p:"Iniziare presto conta più dell’importo: ogni anno in più lavora per te."},
+  {ic:"doc",h:"Anche poco fa la differenza",p:"Un versamento piccolo ma regolare costruisce, negli anni, un capitale vero."},
+  {ic:"shield",h:"Il pilastro lo costruisci tu",p:"La pensione pubblica non basta: il terzo pilastro è quello che decidi tu, per quanto e per come."}]},
+{pil:3,y:"vs",th:"cream",k:"3° pilastro · Individuale",t:"Previdenza collettiva e individuale",ill:"piggy",
+  a:{h:"Collettiva",p:"Il fondo legato al tuo lavoro o al tuo contratto.",li:["Ci aderisci tramite il lavoro","Spesso il datore versa un contributo in più","Costi in genere contenuti"]},
+  b:{h:"Individuale",p:"Un piano che scegli tu, a prescindere dal lavoro.",li:["Adatta anche ad autonomi e partite IVA","Resta con te se cambi lavoro","Decidi tu quanto versare e come"]},
+  foot:"Non si escludono: puoi avere entrambe. In tutte scegli quanto rischio prendere con i tuoi investimenti."},
+ {pil:3,y:"cards",th:"red",k:"Il risparmio conta",t:"Risparmiare non basta: conta come",ill:"piggy",src:"Esempi illustrativi con rendimento e inflazione ipotetici: non sono previsioni né rendimenti garantiti.",c:[
+  {ic:"clock",h:"Gli interessi lavorano per te",p:"Con l’interesse composto gli interessi producono altri interessi: più a lungo resti investito, più cresce.",n:"+80%",l:"10.000 € al 3% annuo per 20 anni diventano circa 18.000 €"},
+  {ic:"euro",h:"L’inflazione erode i risparmi fermi",p:"I prezzi salgono ogni anno: gli stessi soldi comprano sempre meno.",n:"-33%",l:"100 € fermi per 20 anni con inflazione al 2% valgono circa 67 €"},
+  {ic:"doc",h:"La rivalutazione difende il capitale",p:"Gli strumenti pensati per risparmiare nel tempo rivalutano il capitale e aiutano a tenere il passo con i prezzi."},
+  {ic:"shield",h:"Protezione del capitale",p:"Alcune soluzioni prevedono garanzie sul capitale versato: scegli tu quanto rischio prendere e quanto proteggere."}]},
+ {pil:3,y:"cards",th:"cream",k:"3° pilastro · Individuale",t:"Lo strumento giusto per risparmiare",ill:"piggy",src:"Fonti: art. 1923 c.c.; normativa fiscale sulle assicurazioni vita. Le caratteristiche dipendono dal contratto; impignorabilità salvo premi versati in frode ai creditori.",c:[
+  {ic:"shield",h:"Protegge il capitale",p:"Può prevedere la garanzia del capitale versato e rivalutarlo nel tempo."},
+  {ic:"euro",h:"Vantaggio fiscale",p:"In caso di morte, la somma pagata ai beneficiari è esente da IRPEF e da imposta di successione."},
+  {ic:"doc",h:"Impignorabile e insequestrabile",p:"Le somme dovute dall’assicuratore non si possono pignorare né sequestrare (art. 1923 c.c.)."},
+  {ic:"heart",h:"Protegge anche la persona",p:"Oltre al capitale, può tutelare te e chi ti sta a cuore, con beneficiari scelti da te."}]},
+ {pil:3,y:"table",th:"dark",k:"3° pilastro · Individuale",t:"Risparmio fermo o strumento giusto?",ill:"piggy",cols:["Risparmio fermo","Strumento giusto"],
+  rows:[["Capitale",["Esposto","Inflazione e rischi lo erodono, senza protezione specifica."],["Protetto","Può prevedere garanzia sul capitale e rivalutazione."]],
+  ["Creditori",["Pignorabile","Può essere pignorato o sequestrato."],["Impignorabile","Non pignorabile né sequestrabile (art. 1923 c.c.)."]],
+  ["Tasse",["Ordinarie","Imposte secondo le regole generali."],["Agevolate","Somma per morte esente da IRPEF e imposta di successione."]],
+  ["Persone",["Eredità","Si apre la successione: tempi e pratiche."],["Beneficiari","Va direttamente a chi indichi tu."]]],
+  note:"Valori indicativi: le caratteristiche dipendono dal contratto scelto."},
+ {y:"solve",th:"cream",k:"Cosa puoi fare",t:"Come si inizia, in tre passi",ill:"piggy",c:[
+  {ic:"user",h:"Fissa il tuo obiettivo",p:"Decidi quanto vorresti avere in più ogni mese quando smetti di lavorare e tra quanti anni: un numero concreto, anche approssimativo.",eg:"Primo passo."},
+  {ic:"euro",h:"Decidi TFR e versamento",p:"Scegli se conferire il TFR e quanto versare ogni mese, anche poco.",eg:"Secondo passo."},
+  {ic:"clock",h:"Scegli il livello di rischio",p:"Più hai tempo davanti, più puoi permetterti linee di investimento più dinamiche.",eg:"Terzo passo."}]},
+ {y:"check",th:"cream",k:"Dove sei oggi?",t:"Segna la tua situazione",items:["So più o meno quanto sarà la mia pensione","Ho un fondo pensione, collettivo o individuale","So cosa succede al mio TFR","Metto da parte qualcosa ogni mese per il futuro"]},
+ {y:"end"}]},
+
+ltc:{name:"Non autosufficienza",sub:"LTC · ultimo argomento",ic:"shield",ill:"elders",hook:"E se un giorno non fossi più autonomo?",
+ take:["La non autosufficienza riguarda milioni di famiglie e crescerà.","I costi ricadono soprattutto sulla famiglia, e anche la salute di chi assiste ne risente.","Parlarne in tempo lascia più scelte."],
+ slides:[
+ {y:"hero",th:"red",k:"Ultimo argomento · Non autosufficienza",t:"E se un giorno non\nfossi più\nautonomo?",ill:"elders"},
+ {y:"learn",th:"cream",k:"Non autosufficienza",t:"Cos'è la non autosufficienza",ill:"elders",
+  lead:"Significa non riuscire più a fare da soli le cose di ogni giorno: lavarsi, vestirsi, mangiare, muoversi. Può succedere con l'età, ma anche dopo una malattia o un infortunio grave.",
+  terms:[["LTC (Long Term Care)","L'assicurazione che paga una rendita se perdi l'autonomia."],["Rendita","Una somma che ricevi ogni mese, per aiutarti a pagare l'assistenza."],["Caregiver","La persona che assiste chi non è autonomo, spesso un familiare."]]},
+ {y:"big",th:"dark",k:"Non autosufficienza",t:"Anziani non autosufficienti in Italia",big:"4 mln",sub:"e in crescita, mentre la spesa pubblica per l'assistenza a lungo termine cala.",ill:"elders",src:"Fonti: Sky TG24 2026; Istat 2024; lavoce.info",
+  st:[{n:"934 mln €",l:"Fondo non autosufficienze 2026"},{n:"2%",l:"degli anziani vive in strutture residenziali"},{n:"3,5 mln",l:"assistiti a casa, in gran parte dalla famiglia"}]},
+ {y:"big",th:"cream",k:"Un problema di tutti",t:"Persone coinvolte ogni giorno",big:"10 mln",sub:"tra anziani, familiari, caregiver e operatori.",ill:"elders",src:"Fonti: Patto Non Autosufficienza 2026; Istat",
+  st:[{n:"+30%",l:"over 85 nei prossimi 10 anni"},{n:"34,6%",l:"over 65 sulla popolazione nel 2050"},{n:"7,2%",l:"over 85 nel 2050, oggi 3,9%"}]},
+ {y:"news",th:"cream",k:"Non è teoria",t:"La riforma c'è, ma l'assistenza no",ill:"elders",src:"Fonti: Il Post, Avvenire, Sky TG24",c:[
+  {s:"IL POST · 8 OTT 2026",h:"La riforma sulla non autosufficienza è ancora lì",p:"Approvata nel 2023, dopo tre anni è in gran parte da attuare.",n:"3 anni"},
+  {s:"AVVENIRE · 2026",h:"Mancano 1,1 miliardi per avviare la riforma",p:"Il costo aggiuntivo a regime sarebbe di 7 miliardi.",n:"1,1 mld"},
+  {s:"SKY TG24 · 8 MAG 2026",h:"Oltre 4 milioni di non autosufficienti, spesa in calo",p:"La cura ricade soprattutto sulle famiglie.",n:"4 mln"}]},
+ {y:"story",th:"dark",k:"Immagina la scena",t:"Chi si prende cura di chi?",ill:"elders",tag:"Esempio immaginario",steps:[
+  "Un genitore non riesce più a vivere da solo. Qualcuno deve aiutarlo ogni giorno.",
+  "Come per la maggior parte dei 3,5 milioni di assistiti a casa, di solito tocca alla famiglia.",
+  "Un figlio riduce le ore di lavoro. Servono soldi, tempo ed energie, tutti insieme.",
+  "Parlarne prima permette di scegliere come farlo, e non di subire la situazione."]},
+ {y:"big",th:"red",k:"Non autosufficienza · Chi assiste",t:"Prendersi cura di qualcuno costa anche in salute",big:"+63%",sub:"di rischio di morte in 4 anni per i caregiver anziani che vivono l’assistenza con forte stress, rispetto a chi non assiste nessuno.",ill:"elders",src:"Fonte: Schulz e Beach, JAMA 1999 (819 coniugi tra 66 e 96 anni)",
+  st:[{n:"4,5 anni",l:"durata media dello studio"},{n:"392",l:"caregiver confrontati con 427 non caregiver"},{n:"Stress",l:"il rischio più alto è per chi vive l’assistenza con grande fatica emotiva"}]},
+ {y:"solve",th:"cream",k:"Cosa puoi fare",t:"Le soluzioni, in parole semplici",ill:"elders",c:[
+  {ic:"shield",h:"Polizza LTC",p:"Una rendita se perdi l'autonomia nelle attività quotidiane. La famiglia non sostiene da sola i costi e puoi scegliere assistenza e luogo di cura.",eg:"Serve a non pesare solo sui tuoi cari."},
+  {ic:"clock",h:"Iniziare presto",p:"Di solito prima si inizia, più il costo è contenuto.",eg:"Serve a spendere meno nel tempo."},
+  {ic:"user",h:"Parlarne in famiglia",p:"Capire insieme chi farebbe cosa e quali sono le possibilità.",eg:"Serve a non farsi trovare impreparati."}]},
+ {y:"check",th:"cream",k:"Dove sei oggi?",t:"Segna la tua situazione",items:["In famiglia abbiamo parlato di cosa fare se qualcuno non fosse più autonomo","So chi si occuperebbe di assistere","Ho una protezione per questa eventualità"]},
+ {y:"end"}]}
+};
+const ORDER0=["pat","fam","sal","fut"];
+</script>
+<script>
+/* ---------- stato (salvato solo su questo dispositivo) ---------- */
+const KEY='consulenza-4-pilastri-v1';
+const CALM0=150;
+let st={order:ORDER0.slice(),done:{},ans:{},calm:CALM0,notes:['',''],client:''};
+try{const r=JSON.parse(localStorage.getItem(KEY)||'null');
+  if(r&&Array.isArray(r.order)&&r.order.length===4&&ORDER0.every(c=>r.order.includes(c)))st={order:r.order,done:r.done||{},ans:r.ans||{},calm:Number.isFinite(r.calm)?r.calm:CALM0,notes:(Array.isArray(r.notes)&&r.notes.length===2)?r.notes.map(String):['',''],client:typeof r.client==='string'?r.client:''}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+/* ---------- helpers ---------- */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const br=s=>esc(s).replace(/\n/g,'<br>');
+const num=s=>'<span class="cnt" data-v="'+esc(s)+'">'+esc(s)+'</span>';
+const ICON=n=>'<span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#c-'+n+'"/></svg></span>';
+const ILL=(n,c)=>'<div class="ill '+(c||'')+'" aria-hidden="true"><svg viewBox="0 0 300 260"><use href="#i-'+n+'"/></svg></div>';
+const TICK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg>';
+const CK='<span class="ck">'+TICK+'</span>';
+const fmtI=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const kt=s=>'<div class="kick rv">'+esc(s.k)+'</div>'+(s.t?'<h2 class="ttl rv" style="--i:1">'+br(s.t)+'</h2>':'');
+const head=s=>'<div class="head"><div>'+kt(s)+'</div>'+(s.ill?ILL(s.ill,'sm rv'):'')+'</div>';
+const stats=a=>'<div class="stats">'+a.map((x,i)=>'<div class="st rv" style="--i:'+(i+3)+'"><b>'+num(x.n)+'</b><span>'+esc(x.l)+'</span></div>').join('')+'</div>';
+const allDone=()=>ORDER0.every(c=>st.done[c])&&st.done.ltc;
+const startTarget=()=>{const c=st.order.find(c=>!st.done[c]);return c?c+'-1':(!st.done.ltc?'ltc-1':'final')};
+const checkItems=c=>CHAP[c].slides.find(s=>s.y==='check').items;
+const todo=c=>checkItems(c).map((q,i)=>({q,a:st.ans[c+'.'+i]})).filter(x=>x.a==='m'||x.a==='n');
+
+/* ---------- registro slide ---------- */
+const REG=[];
+INTRO.forEach((d,i)=>REG.push({id:'intro-'+(i+1),def:d,grp:'intro',i,n:INTRO.length}));
+REG.push({id:'hub',def:{y:'hub',th:'cream'},grp:'hub'});
+['pat','fam','sal','fut','ltc'].forEach(c=>CHAP[c].slides.forEach((d,i)=>REG.push({id:c+'-'+(i+1),def:d,grp:'ch',ch:c,i,n:CHAP[c].slides.length})));
+REG.push({id:'final',def:{y:'final',th:'cream'},grp:'final'});
+const IDX={};REG.forEach((r,k)=>IDX[r.id]=k);
+
+/* ---------- rendering delle slide ---------- */
+function TID(){return REG.find(q=>q.def.y==='temple').id}
+function ANC(a){const x=REG.find(q=>q.def.anc===a);return x?x.id:''}
+function body(r){const h=body1(r),s=r.def;return s.pil?'<button class="pill back rv" type="button" data-go="'+TID()+'">← Il tempio della pensione</button>'+h:h}
+function body1(r){
+  const s=r.def;
+  switch(s.y){
+  case 'hero': return '<div class="grid2 hero"><div><div class="kick rv">'+esc(s.k)+'</div><h1 class="ttl rv" style="--i:1">'+br(s.t)+'</h1>'+(s.sub?'<p class="lead rv" style="--i:2">'+esc(s.sub)+'</p>':'')+(s.cta?'<p style="margin:22px 0 0"><button class="cta rv" style="--i:3" type="button" data-act="next">'+esc(s.cta)+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></p>':'')+'</div>'+ILL(s.ill,'rv')+'</div>';
+  case 'learn': return head(s)+'<p class="lead rv" style="--i:2">'+esc(s.lead)+'</p><div class="tlab rv" style="--i:3">Parole da sapere</div><div class="terms'+(s.terms.length===4?' t4':'')+'">'+s.terms.map((t,i)=>'<div class="tm rv" style="--i:'+(i+4)+'"><b>'+esc(t[0])+'</b><span>'+esc(t[1])+'</span></div>').join('')+'</div>';
+  case 'big': return '<div class="grid2"><div>'+kt(s)+'<div class="big rv" style="--i:2">'+num(s.big)+'</div><p class="sub rv" style="--i:3">'+esc(s.sub)+'</p></div>'+ILL(s.ill,'rv')+'</div>'+stats(s.st);
+  case 'cards': return head(s)+'<div class="cds">'+s.c.map((c,i)=>'<div class="cd rv" style="--i:'+(i+2)+'">'+ICON(c.ic)+'<h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p>'+(c.n?'<div class="nbx"><span class="n">'+num(c.n)+'</span><span class="l">'+esc(c.l)+'</span></div>':'')+'</div>').join('')+'</div>';
+  case 'solve': return head(s)+'<div class="cds'+(s.c.length===4?' two':'')+'">'+s.c.map((c,i)=>'<div class="cd rv" style="--i:'+(i+2)+'">'+ICON(c.ic)+'<h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p>'+(c.eg?'<div class="eg">'+esc(c.eg)+'</div>':'')+'</div>').join('')+'</div>';
+  case 'news': return head(s)+'<div class="cds">'+s.c.map((c,i)=>'<div class="cd nw rv" style="--i:'+(i+2)+'"><span class="src">'+esc(c.s)+'</span><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p><div class="nbx"><span class="n">'+num(c.n)+'</span></div></div>').join('')+'</div>';
+  case 'bars': return head(s)+'<div class="bars">'+s.r.map((x,i)=>'<div class="br rv" style="--i:'+(i+2)+'"><span>'+esc(x.l)+'</span><div class="trk"><div class="fill '+x.c+'" style="--w:'+x.v+'%">'+esc(x.t)+'</div></div></div>').join('')+'</div><p class="foots rv" style="--i:5">'+esc(s.foot)+'</p>';
+  case 'story': return head(s)+'<p class="rv" style="--i:2;margin:0"><span class="tag">'+esc(s.tag)+'</span></p><div class="story">'+s.steps.map((t,i)=>'<div class="sp1'+(i===s.steps.length-1?' last':'')+'" '+(i?'hidden':'')+'><span class="no">'+(i+1)+'</span><span>'+esc(t)+'</span></div>').join('')+'</div><button class="more rv" style="--i:4" type="button" data-act="more">E poi?</button>';
+  case 'vs': return head(s)+'<div class="vs">'+[s.a,s.b].map((x,i)=>'<div class="cd rv" style="--i:'+(i+2)+'"><h3>'+esc(x.h)+'</h3><p>'+esc(x.p)+'</p><ul>'+x.li.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul></div>').join('')+'</div><p class="foots rv" style="--i:4">'+esc(s.foot)+'</p>';
+  case 'check': return head(s)+'<div class="chk">'+s.items.map((q,i)=>{const k=r.ch+'.'+i,a=st.ans[k];return '<div class="cq rv" style="--i:'+(i+2)+'"><span>'+esc(q)+'</span><div class="seg" role="group" aria-label="'+esc(q)+'" data-k="'+k+'">'+[['y','Sì'],['m','Non so'],['n','No']].map(b=>'<button type="button" data-v="'+b[0]+'" aria-pressed="'+(a===b[0])+'">'+b[1]+'</button>').join('')+'</div></div>'}).join('')+'</div><p class="hint rv" style="--i:6">Risposte solo per te: le useremo alla fine per farti una lista di cose da approfondire.</p>';
+  case 'temple': return head(s)+'<div class="temple"><div class="troof rv" style="--i:2"><span>PENSIONE</span></div><div class="tcols">'+s.p.map((c,i)=>'<button type="button" class="tcol rv" style="--i:'+(i+3)+'" data-go="'+ANC(c.anc)+'"><span class="no">'+esc(c.n)+'</span><h3>'+esc(c.h)+'</h3><p>'+esc(c.p)+'</p><span class="go">Scopri di più →</span></button>').join('')+'</div><div class="tb1"></div><div class="tb2"></div></div><p class="hint rv" style="--i:7">'+esc(s.hint)+'</p>';
+  case 'table': return head(s)+'<div class="cmpw rv" style="--i:2"><table class="cmp"><thead><tr><th scope="col"><span class="sr">Voce</span></th>'+s.cols.map(c=>'<th scope="col">'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+s.rows.map(r=>'<tr><th scope="row">'+esc(r[0])+'</th>'+r.slice(1).map((c,i)=>'<td class="'+(i?'ok':'ko')+'"><b>'+esc(c[0])+'</b>'+esc(c[1])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div><p class="note rv" style="--i:5">'+esc(s.note)+'</p>';
+  case 'calc': return calcHtml(s);
+  case 'end': case 'hub': case 'final': return '<div id="dyn-'+r.id+'"></div>';
+  }
+  return '';
+}
+function calcHtml(s){
+  if(s.id==='runway')return '<div class="grid2"><div>'+kt(s)+'<div class="big rv" style="--i:2" id="rw-big">30.000 €</div><p class="sub rv" style="--i:3" id="rw-sub"></p></div>'+ILL(s.ill,'rv')+'</div>'+
+    '<div class="calc rv" style="--i:4"><label for="rw-in">Le spese fisse della tua famiglia in un mese (mutuo o affitto, bollette, spesa, scuola, auto)</label><input id="rw-in" type="range" min="800" max="6000" step="100" value="2500"><output for="rw-in" id="rw-o">2.500 €</output></div>'+
+    '<div class="stats"><div class="st rv" style="--i:5"><b id="rw-1"></b><span>per 6 mesi</span></div><div class="st rv" style="--i:6"><b id="rw-2"></b><span>per 12 mesi</span></div><div class="st rv" style="--i:7"><b id="rw-3"></b><span>per 24 mesi</span></div></div><p class="note">Calcolo semplice: spese mensili per numero di mesi. Serve a farti un\'idea, non è un preventivo.</p>';
+  if(s.id==='pension')return '<div class="grid2"><div><div class="kick rv">'+esc(s.k)+'</div><h2 class="ttl rv" style="--i:1">Con <span id="pn-s">2.500</span> € netti al mese</h2><div class="big rv" style="--i:2" id="pn-big">1.000 €</div><p class="sub rv" style="--i:3">al mese di differenza tra ultimo stipendio e pensione, con un tasso di sostituzione del 60%.</p></div>'+ILL(s.ill,'rv')+'</div>'+
+    '<div class="calc rv" style="--i:4"><label for="pn-in">Prova con il tuo stipendio netto mensile</label><input id="pn-in" type="range" min="1000" max="6000" step="100" value="2500"><output for="pn-in" id="pn-o">2.500 €</output></div>'+
+    '<div class="stats"><div class="st rv" style="--i:5"><b id="pn-1">2.500 €</b><span>stipendio netto mensile</span></div><div class="st rv" style="--i:6"><b id="pn-2">1.500 €</b><span>pensione stimata</span></div><div class="st rv" style="--i:7"><b>'+num('21%')+'</b><span>degli aderenti ha meno di 35 anni</span></div></div><div class="ft">'+esc(s.src)+'</div>';
+  return '';
+}
+const $=id=>document.getElementById(id);
+function bindCalc(){
+  const rw=$('rw-in'),pn=$('pn-in');
+  const u1=()=>{const v=+rw.value;$('rw-o').textContent=fmtI(v)+' €';$('rw-big').textContent=fmtI(v*12)+' €';$('rw-sub').textContent='servirebbero per coprire 12 mesi di spese di '+fmtI(v)+' € al mese, se il reddito si azzerasse.';$('rw-1').textContent=fmtI(v*6)+' €';$('rw-2').textContent=fmtI(v*12)+' €';$('rw-3').textContent=fmtI(v*24)+' €'};
+  const u2=()=>{const v=+pn.value;$('pn-o').textContent=fmtI(v)+' €';$('pn-s').textContent=fmtI(v);$('pn-big').textContent=fmtI(v*.4)+' €';$('pn-1').textContent=fmtI(v)+' €';$('pn-2').textContent=fmtI(v*.6)+' €'};
+  rw.addEventListener('input',u1);pn.addEventListener('input',u2);u1();u2();
+}
+
+/* ---------- hub, capitolo concluso, riepilogo ---------- */
+function hubList(anim,moved){
+  return st.order.map((c,i)=>{const d=CHAP[c],dn=!!st.done[c];
+    return '<div class="hc'+(dn?' done':'')+(moved===c?' moved':'')+(anim?' rv':'')+'" style="--i:'+(i+3)+'"><span class="rk">'+(dn?TICK:(i+1))+'</span>'+ICON(d.ic)+
+    '<div class="tx"><div class="ph">'+esc(d.name)+'</div><div class="ps">'+esc(d.sub)+'</div><div class="hq">'+esc(d.hook)+'</div></div>'+
+    '<div class="ctl"><button class="mv" type="button" data-mv="'+c+':-1" aria-label="Sposta '+esc(d.name)+' più in alto" '+(i===0?'disabled':'')+'><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>'+
+    '<button class="mv" type="button" data-mv="'+c+':1" aria-label="Sposta '+esc(d.name)+' più in basso" '+(i===3?'disabled':'')+'><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>'+
+    '<button class="open" type="button" data-go="'+c+'-1">'+(dn?'Rivedi':'Apri')+'</button></div></div>'}).join('');
+}
+function hubLtc(){const n=ORDER0.filter(c=>st.done[c]).length,ready=n===4,d=CHAP.ltc;
+  return '<div class="ltc'+(ready?' ready':'')+'"><div><div class="kick" style="color:var(--accpaper)">Ultimo argomento</div><div class="ph" style="font-family:var(--fd);font-size:1.3rem;font-weight:700">'+(st.done.ltc?'✓ ':'')+esc(d.name)+' (LTC)</div><p class="hint">'+(ready?'Hai finito i 4 pilastri: ora tocca a questo.':'Lo affrontiamo per ultimo, dopo i 4 pilastri.')+'</p></div><button class="open" type="button" data-go="ltc-1">'+(st.done.ltc?'Rivedi':'Apri')+'</button></div>';}
+function refreshHub(){
+  const n=ORDER0.filter(c=>st.done[c]).length;
+  $('dyn-hub').innerHTML='<div class="in" style="min-height:0;padding:0;max-width:none"><div class="kick rv">Panoramica</div><h2 class="ttl rv" style="--i:1">Da dove vuoi partire?</h2><p class="lead rv" style="--i:2">Quattro pilastri da proteggere. Metti in cima quello che senti più importante per te: partiremo da lì. Usa le frecce per cambiare l\'ordine.</p><p class="hint rv" style="--i:2"><b>'+n+' di 4</b> pilastri completati</p><div class="hubgrid" id="hubList">'+hubList(true)+'</div><div class="rv" style="--i:7">'+hubLtc()+'</div></div>';
+}
+function refreshEnd(r){
+  const c=CHAP[r.ch],t=todo(r.ch),ans=checkItems(r.ch).some((q,i)=>st.ans[r.ch+'.'+i]),nx=startTarget();
+  const nm=nx==='final'?null:CHAP[nx.split('-')[0]].name;
+  $('dyn-'+r.id).innerHTML=head({k:c.name+' · fatto',t:'Capitolo completato',ill:c.ill})+'<div class="tlab rv" style="--i:2">Tre cose da ricordare</div><div class="ends">'+c.take.map((x,i)=>'<div class="tk rv" style="--i:'+(i+3)+'">'+CK+'<span>'+esc(x)+'</span></div>').join('')+'</div>'+
+   '<div class="tobe rv" style="--i:6"><h3>Da approfondire con il consulente</h3>'+(t.length?'<ul>'+t.map(x=>'<li>'+esc(x.q)+' <b>('+(x.a==='n'?'No':'Non so')+')</b></li>').join('')+'</ul>':'<p style="margin:0">'+(ans?'Sei già a posto su tutto quello che hai segnato. Ottimo.':'Non hai ancora segnato la tua situazione. Se vuoi, torna indietro a «Dove sei oggi?».')+'</p>')+'</div>'+
+   '<p style="margin:0" class="rv"><button class="cta" type="button" data-go="hub">Torna alla panoramica</button></p>'+(nm?'<p class="hint rv">Prossimo argomento: <b>'+esc(nm)+'</b></p>':'');
+}
+/* ---------- riepilogo finale, PDF, nuova consulenza ---------- */
+const fmtDate=()=>new Date().toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+const rankList=()=>st.order.concat(['ltc']);
+let DL=null,resetAsk=false;
+(async()=>{try{if(window.claude&&window.claude.use)DL=await window.claude.use('downloads')}catch(e){DL=null}})();
+
+function refreshFinal(){
+  const rows=rankList().map((c,i)=>{
+    const d=CHAP[c],t=todo(c),dn=!!st.done[c],ans=checkItems(c).some((q,k)=>st.ans[c+'.'+k]);
+    const detail=t.length
+      ?'<ul>'+t.map(x=>'<li>'+esc(x.q)+' <b>('+(x.a==='n'?'No':'Non so')+')</b></li>').join('')+'</ul>'
+      :'<p class="rs">'+(ans?'Sei già a posto su tutto quello che hai segnato.':(dn?'Nessuna risposta segnata.':'Non ancora affrontato.'))+'</p>';
+    return '<div class="rank rv" style="--i:'+(i+3)+'"><span class="rn">'+(i+1)+'</span><div class="rt"><div class="rh"><b>'+esc(d.name)+'</b><span class="rsub">'+(c==='ltc'?'Ultimo argomento':esc(d.sub))+'</span></div>'+detail+'</div></div>';
+  }).join('');
+  const v=st.calm;
+  $('dyn-final').innerHTML=
+   '<div class="head"><div><div class="kick rv">Il tuo piano di protezione</div><h2 class="ttl rv" style="--i:1">Hai fatto il primo passo</h2><p class="lead rv" style="--i:2">Gli argomenti sono nell’ordine di importanza che hai scelto. Aggiungi la tua cifra di tranquillità e due note per il consulente, poi scarica il riepilogo.</p></div>'+ILL('family','sm rv')+'</div>'+
+   '<div class="nt cl rv" style="--i:3"><label for="client-in">Nome della persona a cui fai la consulenza</label><input id="client-in" type="text" maxlength="80" autocomplete="off" placeholder="Per esempio: Mario Rossi"></div>'+
+   '<div class="tlab rv" style="--i:3">Argomenti in ordine di importanza</div><div class="ranks">'+rows+'</div>'+
+   '<div class="tlab rv" style="--i:9">Cifra di massima tranquillità</div>'+
+   '<div class="calc rv" style="--i:10"><label for="calm-in">Quanto puoi dedicare ogni mese alla tua protezione restando sereno?</label><input id="calm-in" type="range" min="0" max="1000" step="10" value="'+v+'"><output for="calm-in" id="calm-o">'+fmtI(v)+' € al mese</output><p class="note" id="calm-y">Circa '+fmtI(v*12)+' € l’anno</p></div>'+
+   '<div class="tlab rv" style="--i:11">Due note per il consulente</div>'+
+   '<div class="notes rv" style="--i:12"><div class="nt"><label for="note-1">Nota 1</label><textarea id="note-1" maxlength="400" placeholder="Per esempio: cosa ti preoccupa di più">'+esc(st.notes[0])+'</textarea></div><div class="nt"><label for="note-2">Nota 2</label><textarea id="note-2" maxlength="400" placeholder="Per esempio: cosa vuoi chiarire insieme">'+esc(st.notes[1])+'</textarea></div></div>'+
+   '<div class="actions rv" style="--i:13"><button class="cta red" type="button" data-act="dl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Scarica il riepilogo (PDF)</button><button class="pill" type="button" data-go="hub">Torna alla panoramica</button></div>'+
+   '<p class="dlst" id="dlst" role="status" aria-live="polite"></p>';
+  const cn=$('client-in');cn.value=st.client||'';cn.addEventListener('input',()=>{st.client=cn.value;save()});
+  const ci=$('calm-in');
+  ci.addEventListener('input',()=>{const n=+ci.value;st.calm=n;save();$('calm-o').textContent=fmtI(n)+' € al mese';$('calm-y').textContent='Circa '+fmtI(n*12)+' € l’anno'});
+  [1,2].forEach(n=>{const t=$('note-'+n);t.addEventListener('input',()=>{st.notes[n-1]=t.value;save()})});
+}
+
+function makePdf(){
+  const J=window.jspdf&&window.jspdf.jsPDF;
+  if(!J)throw {code:'nolib'};
+  const doc=new J({unit:'pt',format:'a4'}),W=595,M=50,CW=W-2*M,BOT=790,RED=[196,26,22],MU=[94,90,96];
+  let y=M;
+  const cl=s=>String(s).replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/…/g,'...').replace(/[–—]/g,'-');
+  const need=h=>{if(y+h>BOT){doc.addPage();y=M}};
+  const txt=(s,o)=>{o=o||{};
+    const sz=o.size||11,x=o.x||M,w=o.w||CW,lh=sz*1.4;
+    doc.setFont('helvetica',o.bold?'bold':'normal');doc.setFontSize(sz);doc.setTextColor(...(o.col||[31,31,36]));
+    doc.splitTextToSize(cl(s),w).forEach(l=>{need(lh);doc.text(l,x,y+sz);y+=lh});
+    y+=o.gap||0};
+  const head=s=>{y+=10;need(40);txt(s.toUpperCase(),{size:10,bold:true,col:RED,gap:6})};
+
+  txt('Il tuo piano di protezione',{size:24,bold:true,col:RED,gap:2});
+  {const nm=(st.client||'').trim();if(nm)txt('Consulenza per '+nm,{size:13,bold:true,gap:2})}
+  txt('Riepilogo della consulenza del '+fmtDate(),{size:10,col:MU,gap:8});
+  doc.setDrawColor(231,218,209);doc.setLineWidth(.8);doc.line(M,y,W-M,y);y+=6;
+
+  head('Argomenti in ordine di importanza');
+  rankList().forEach((c,i)=>{
+    const d=CHAP[c],t=todo(c),dn=!!st.done[c],ans=checkItems(c).some((q,k)=>st.ans[c+'.'+k]);
+    need(60);
+    txt((i+1)+'. '+d.name,{size:13,bold:true});
+    txt(c==='ltc'?'Ultimo argomento':d.sub,{size:10,col:MU,x:M+16,w:CW-16,gap:2});
+    if(t.length)t.forEach(x=>txt('- '+x.q+' ('+(x.a==='n'?'No':'Non so')+')',{size:10.5,x:M+16,w:CW-16}));
+    else txt(ans?'Situazione a posto su quanto segnato.':(dn?'Nessuna risposta segnata.':'Non ancora affrontato.'),{size:10.5,col:MU,x:M+16,w:CW-16});
+    y+=8;
+  });
+
+  head('Cifra di massima tranquillità');
+  need(100);
+  doc.setFillColor(249,225,220);doc.roundedRect(M,y,CW,84,10,10,'F');
+  const y0=y;y+=14;
+  txt(fmtI(st.calm)+' euro al mese',{size:24,bold:true,col:RED,x:M+18,w:CW-36,gap:2});
+  txt("Circa "+fmtI(st.calm*12)+" euro l'anno: la cifra che posso dedicare alla mia protezione restando sereno.",{size:10,col:MU,x:M+18,w:CW-36});
+  y=y0+84+10;
+
+  head('Note per il consulente');
+  [0,1].forEach(k=>{
+    need(60);
+    txt('Nota '+(k+1),{size:11,bold:true,gap:2});
+    txt((st.notes[k]||'').trim()||'-',{size:11,col:(st.notes[k]||'').trim()?[31,31,36]:MU,gap:10});
+  });
+
+  y+=6;
+  txt('Documento di supporto alla consulenza. Cifre e valutazioni sono indicative e non costituiscono un preventivo.',{size:9,col:MU});
+  const n=doc.getNumberOfPages();
+  for(let p=1;p<=n;p++){doc.setPage(p);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...MU);doc.text('Pagina '+p+' di '+n,W/2,820,{align:'center'})}
+  return doc.output('arraybuffer');
+}
+
+async function downloadPdf(){
+  const say=m=>{const o=$('dlst');if(o)o.textContent=m};
+  try{
+    const buf=makePdf();
+    const slug=(st.client||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
+    const fname='Riepilogo-consulenza'+(slug?'-'+slug:'')+'.pdf';
+    if(DL){await DL.save({filename:fname,data:buf});say('Riepilogo salvato.')}
+    else{const u=URL.createObjectURL(new Blob([buf],{type:'application/pdf'})),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);say('Riepilogo scaricato.')}
+  }catch(err){
+    const c=err&&err.code;
+    say(c==='declined'?'Salvataggio annullato.':c==='nolib'?'Non riesco a creare il PDF. Ricarica la pagina e riprova.':'Il salvataggio non è andato a buon fine. Riprova.');
+  }
+}
+
+function newBlock(){
+  const ico='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.300L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.300L4 15M4 20v-5h5"/></svg>';
+  if(!resetAsk)return '<div class="rnew"><button class="rbtn" type="button" data-new="ask">'+ico+'Inizia una nuova consulenza</button></div>';
+  return '<div class="rnew"><p class="rask">Cancello spunte, ordine e risposte di questa consulenza e riparto da capo?</p><div class="rrow"><button class="rbtn" type="button" data-new="no">Annulla</button><button class="rbtn go" type="button" data-new="yes">Sì, riparti</button></div></div>';
+}
+function doReset(){
+  resetAsk=false;
+  st={order:ORDER0.slice(),done:{},ans:{},calm:CALM0,notes:['',''],client:''};save();
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed','false'));
+  show('intro-1');
+}
+function refreshRail(cur){
+  const r=REG[IDX[cur]],ch=r.ch||null;
+  const item=(c,k)=>{const d=CHAP[c],dn=!!st.done[c];return '<button class="ri'+(dn?' done':'')+'" type="button" data-go="'+c+'-1" aria-current="'+(ch===c)+'"><span class="dot n">'+(dn?TICK:k)+'</span><span><b>'+esc(d.name)+'</b><small>'+esc(d.sub)+'</small></span></button>'}
+  $('rail').innerHTML='<div class="rhead"><div><div class="brand">La tua consulenza</div><div class="brandsub">Un percorso in 5 argomenti</div></div><button class="rx" type="button" data-act="menu" aria-label="Chiudi il menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'+
+   '<div class="rscroll"><button class="ri" type="button" data-go="hub" aria-current="'+(cur==='hub')+'"><span><b>Panoramica</b><small>Ordine e avanzamento</small></span></button>'+
+   '<div class="rl">I 4 pilastri</div>'+st.order.map((c,i)=>item(c,i+1)).join('')+'<div class="rl">Ultimo argomento</div>'+item('ltc','5')+
+   '<div class="rl">Alla fine</div><button class="ri'+(allDone()?' done':'')+'" type="button" data-go="final" aria-current="'+(cur==='final')+'"><span><b>Riepilogo</b><small>Argomenti, cifra e note in PDF</small></span></button>'+
+   '</div>'+newBlock()+'<div class="railfoot">Ordine, spunte e risposte restano su questo dispositivo.</div>';
+}
+</script>
+<script>
+/* ---------- montaggio ---------- */
+const deck=$('deck');
+deck.innerHTML=REG.map(r=>{const d=r.def,th=d.th||'red';
+  return '<section class="sl t-'+th+'" id="s-'+r.id+'" aria-label="'+esc(r.id)+'"><div class="bg"><div class="blob b-a"></div><div class="blob b-b"></div></div><div class="in">'+body(r)+(d.src&&d.y!=='calc'?'<footer class="ft">'+esc(d.src)+'</footer>':'')+'</div></section>'}).join('');
+const els=REG.map(r=>$('s-'+r.id));
+bindCalc();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let cur=null;
+
+/* ---------- contatori animati ---------- */
+function parse(v){
+  const m=v.match(/^(\+?)(\d{1,3}(?:\.\d{3})+|\d+(?:,\d+)?)(.*)$/);if(!m)return null;
+  if(!/^[\s%€°]*(mln|mld|anni|punti|redditi)?[\s%€]*$/.test(m[3]))return null;
+  const th=/\./.test(m[2]);
+  return {pre:m[1],th,dec:th?0:(m[2].split(',')[1]||'').length,val:parseFloat(th?m[2].replace(/\./g,''):m[2].replace(',','.')),suf:m[3]};
+}
+function fmt(p,x){let s=p.dec?x.toFixed(p.dec).replace('.',','):String(Math.round(x));if(p.th)s=s.replace(/\B(?=(\d{3})+(?!\d))/g,'.');return p.pre+s+p.suf}
+function runCounters(el,id){
+  if(reduce)return;
+  el.querySelectorAll('.cnt').forEach(c=>{
+    const v=c.dataset.v,p=parse(v);if(!p||p.val===0)return;
+    const t0=performance.now()+200,D=1000;
+    (function step(t){const k=Math.min(1,Math.max(0,(t-t0)/D)),e=1-Math.pow(1-k,3);
+      c.textContent=k<1?fmt(p,p.val*e):v;
+      if(k<1&&cur===id)requestAnimationFrame(step);else c.textContent=v})(performance.now());
+  });
+}
+
+/* ---------- navigazione ---------- */
+function nextId(id){const r=REG[IDX[id]];
+  if(r.grp==='intro')return r.i<r.n-1?'intro-'+(r.i+2):'hub';
+  if(r.grp==='hub')return startTarget();
+  if(r.grp==='ch')return r.i<r.n-1?r.ch+'-'+(r.i+2):(allDone()?'final':'hub');
+  return null}
+function prevId(id){const r=REG[IDX[id]];
+  if(r.grp==='intro')return r.i>0?'intro-'+r.i:null;
+  if(r.grp==='hub')return 'intro-'+INTRO.length;
+  if(r.grp==='ch')return r.i>0?r.ch+'-'+r.i:'hub';
+  return 'hub'}
+
+function resetStory(el){const s=el.querySelectorAll('.sp1');if(!s.length)return;s.forEach((x,i)=>x.hidden=i>0);const b=el.querySelector('[data-act="more"]');if(b)b.hidden=false}
+
+function show(id){
+  if(!(id in IDX))id='intro-1';
+  const r=REG[IDX[id]];
+  cur=id;if(rail.classList.contains('shown'))setRail(false);
+  if(r.grp==='ch'&&r.def.y==='end'){st.done[r.ch]=true;save()}
+  if(r.grp==='hub')refreshHub();
+  if(r.grp==='ch'&&r.def.y==='end')refreshEnd(r);
+  if(r.grp==='final')refreshFinal();
+  resetStory(els[IDX[id]]);
+  const k=IDX[id];
+  els.forEach((e,j)=>{e.classList.toggle('on',j===k);e.classList.toggle('before',j<k);e.inert=j!==k;e.setAttribute('aria-hidden',j!==k?'true':'false')});
+  els[k].scrollTop=0;
+  refreshRail(id);
+  updateNav(r,id);
+  try{history.replaceState(null,'','#'+id)}catch(e){}
+  runCounters(els[k],id);
+}
+
+function updateNav(r,id){
+  const w=$('where'),dots=$('steps'),nx=nextId(id),pv=prevId(id);
+  let label='Avanti',frac=0;
+  if(r.grp==='intro'){w.textContent='Introduzione';dots.innerHTML=Array.from({length:r.n},(_,i)=>'<i class="'+(i===r.i?'on':i<r.i?'past':'')+'"></i>').join('')}
+  else if(r.grp==='hub'){w.textContent='Panoramica';dots.innerHTML='';const t=startTarget();label=t==='final'?'Vai al riepilogo':t==='ltc-1'?'Ultimo argomento':'Parti da: '+CHAP[t.split('-')[0]].name}
+  else if(r.grp==='ch'){w.textContent=CHAP[r.ch].name+' · '+(r.i+1)+' di '+r.n;frac=(r.i+1)/r.n;dots.innerHTML=Array.from({length:r.n},(_,i)=>'<i class="'+(i===r.i?'on':i<r.i?'past':'')+'"></i>').join('');if(r.def.y==='end')label=allDone()?'Vai al riepilogo':'Torna alla panoramica'}
+  else{w.textContent='Riepilogo';dots.innerHTML=''}
+  const n=ORDER0.concat(['ltc']).filter(c=>st.done[c]).length;
+  const p=r.grp==='final'?100:r.grp==='intro'?1:Math.max(1,(n+(r.grp==='ch'&&!st.done[r.ch]?frac:0))/5*100);
+  $('progi').style.width=Math.min(100,p)+'%';
+  $('nextl').textContent=label;
+  $('next').disabled=!nx;$('prev').disabled=!pv;
+}
+const go=id=>{if(id)show(id)};
+$('next').onclick=()=>go(nextId(cur));
+$('prev').onclick=()=>go(prevId(cur));
+$('homeBtn').onclick=()=>show('hub');
+const fsBtn=$('fsBtn');
+const FS_IN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+const FS_OUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+function fsSync(){const on=!!document.fullscreenElement;fsBtn.innerHTML=on?FS_OUT:FS_IN;const t=on?'Esci dallo schermo intero':'Schermo intero';fsBtn.setAttribute('aria-label',t);fsBtn.title=t}
+if(document.fullscreenEnabled&&document.documentElement.requestFullscreen){fsBtn.hidden=false;fsSync()}
+fsBtn.onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){fsBtn.hidden=true}};
+document.addEventListener('fullscreenchange',fsSync);
+
+const rail=$('rail'),scrim=$('scrim'),menuBtn=$('menuBtn');rail.inert=true;
+function setRail(o){rail.classList.toggle('shown',o);scrim.classList.toggle('shown',o);rail.inert=!o;menuBtn.setAttribute('aria-expanded',String(o));
+  if(o){const f=rail.querySelector('[aria-current="true"]')||rail.querySelector('button');if(f)f.focus()}else if(rail.contains(document.activeElement))menuBtn.focus()}
+/* click su tutta l'app */
+document.addEventListener('click',e=>{
+  if(e.target===scrim){setRail(false);return}
+  if(e.target.closest('[data-act="menu"]')){setRail(!rail.classList.contains('shown'));return}
+  const nw=e.target.closest('[data-new]');
+  if(nw){const a=nw.dataset.new;if(a==='yes'){doReset();return}resetAsk=(a==='ask');refreshRail(cur);const f=rail.querySelector('[data-new]');if(f)f.focus();return}
+  if(e.target.closest('[data-act="dl"]')){downloadPdf();return}
+  const g=e.target.closest('[data-go]');if(g){show(g.dataset.go);return}
+  if(e.target.closest('[data-act="next"]')){go(nextId(cur));return}
+  const m=e.target.closest('[data-act="more"]');
+  if(m){const sec=m.closest('.sl'),hid=[...sec.querySelectorAll('.sp1[hidden]')];if(hid.length){hid[0].hidden=false;hid[0].scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'})}if(hid.length<=1)m.hidden=true;return}
+  const v=e.target.closest('.seg [data-v]');
+  if(v){const seg=v.parentElement,k=seg.dataset.k;st.ans[k]=st.ans[k]===v.dataset.v?undefined:v.dataset.v;if(!st.ans[k])delete st.ans[k];save();seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(st.ans[k]===b.dataset.v)));return}
+  const mv=e.target.closest('[data-mv]');
+  if(mv){const [c,d]=mv.dataset.mv.split(':'),i=st.order.indexOf(c),j=i+(+d);if(j<0||j>3)return;
+    [st.order[i],st.order[j]]=[st.order[j],st.order[i]];save();
+    $('hubList').innerHTML=hubList(false,c);refreshRail(cur);updateNav(REG[IDX[cur]],cur);
+    const nb=document.querySelector('[data-mv="'+c+':'+d+'"]:not([disabled])')||document.querySelector('[data-mv="'+c+':'+(-d)+'"]:not([disabled])');if(nb)nb.focus()}
+});
+
+/* tastiera e swipe */
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&rail.classList.contains('shown')){setRail(false);return}
+  if(e.target.matches('input,textarea'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(nextId(cur));
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')go(prevId(cur));
+});
+let tx=0,ty=0;
+deck.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+deck.addEventListener('touchend',e=>{
+  if(e.target.closest('input,textarea'))return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.6)go(dx<0?nextId(cur):prevId(cur));
+},{passive:true});
+addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h in IDX&&h!==cur)show(h)});
+
+show((location.hash.slice(1) in IDX)?location.hash.slice(1):'intro-1');
+</script>
+
+
+</body></html>
